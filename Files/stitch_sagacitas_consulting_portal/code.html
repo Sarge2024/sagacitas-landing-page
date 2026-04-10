@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Sagacitas Consulting | Arquitetura Industrial de Negócios</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#59666d",
+                        "background": "#f8fafb",
+                        "tertiary-fixed": "#79f7ea",
+                        "surface-tint": "#356575",
+                        "on-surface": "#191c1d",
+                        "surface-dim": "#d8dadb",
+                        "secondary-container": "#d7e5ed",
+                        "surface-container-high": "#e6e8e9",
+                        "secondary-fixed-dim": "#bbc9d1",
+                        "on-error": "#ffffff",
+                        "on-background": "#191c1d",
+                        "tertiary-fixed-dim": "#5adace",
+                        "on-primary-fixed-variant": "#194d5c",
+                        "tertiary": "#002724",
+                        "surface-container-highest": "#e1e3e4",
+                        "outline": "#71787c",
+                        "primary-fixed-dim": "#9ecee0",
+                        "surface-container": "#eceeef",
+                        "on-tertiary-fixed-variant": "#00504a",
+                        "on-tertiary-container": "#23b3a8",
+                        "on-secondary-fixed-variant": "#3c494f",
+                        "secondary-fixed": "#d7e5ed",
+                        "inverse-on-surface": "#eff1f2",
+                        "primary-fixed": "#baeafd",
+                        "surface": "#f8fafb",
+                        "on-primary-container": "#78a8b9",
+                        "surface-bright": "#f8fafb",
+                        "surface-variant": "#e1e3e4",
+                        "primary-container": "#003d4c",
+                        "inverse-primary": "#9ecee0",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#2e3132",
+                        "outline-variant": "#c0c8cb",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#00201d",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "secondary": "#536067",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed": "#111d23",
+                        "primary": "#002630",
+                        "on-surface-variant": "#41484b",
+                        "on-primary-fixed": "#001f28",
+                        "tertiary-container": "#003f3a",
+                        "surface-container-low": "#f2f4f5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .editorial-text {
+            letter-spacing: -0.02em;
+        }
+
+        .tonal-nesting-bg-shift {
+            transition: background-color 0.3s ease;
+        }
+
+        .asymmetric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+    </style>
+</head>
+
+<body class="bg-background font-body text-on-surface selection:bg-tertiary-fixed selection:text-on-tertiary-fixed">
+    <!-- TopNavBar -->
+    <nav class="fixed top-0 w-full z-50 bg-surface/70 backdrop-blur-md shadow-sm">
+        <div class="flex justify-between items-center px-8 py-4 max-w-7xl mx-auto">
+            <div class="text-2xl font-black text-[#002630] font-headline tracking-tight">
+                Sagacitas
+            </div>
+            <div class="hidden md:flex gap-8 items-center">
+                <a class="text-slate-600 hover:text-[#002630] font-['Manrope'] font-bold tracking-tight transition-all duration-300"
+                    href="#quem-somos">Quem Somos</a>
+                <a class="text-slate-600 hover:text-[#002630] font-['Manrope'] font-bold tracking-tight transition-all duration-300"
+                    href="#servicos">Serviços</a>
+                <a class="text-slate-600 hover:text-[#002630] font-['Manrope'] font-bold tracking-tight transition-all duration-300"
+                    href="#clientes">Clientes</a>
+                <a class="text-slate-600 hover:text-[#002630] font-['Manrope'] font-bold tracking-tight transition-all duration-300"
+                    href="#contato">Contato</a>
+            </div>
+            <div class="flex items-center">
+                <button
+                    class="bg-[#002630] text-white px-6 py-2 rounded-[0.125rem] font-bold text-sm hover:opacity-80 transition-all duration-300 active:scale-95">
+                    Área do Cliente
+                </button>
+            </div>
+        </div>
+    </nav>
+    <main class="pt-20">
+        <!-- Hero Section -->
+        <section class="relative min-h-[921px] flex items-center overflow-hidden bg-surface-container-highest">
+            <div class="absolute inset-0 z-0">
+                <img class="w-full h-full object-cover opacity-30 grayscale mix-blend-multiply"
+                    data-alt="Blurred technological background of a modern industrial facility with teal lighting."
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrV6nlAseUV6QiDggArkUM6udIrPRUsNwsMA9l0_MgkSE9FdnUoyTeGAasg-tf7qEJayx2w3vJUfb3X7Mt5VTB-c612qizFrM4GgKSpWLs8mV60pRUFeUq2dRFHNcI00AqC3f3HEbP2cZhLKwxpOLzAI-EncFa8rQ7T25IBGRWdXwGprUVKLdh6OaZs8A8nU6MPOYB6eTuw29M9ot2-BHeLl4l7VguXWn7xTjztggCwY3ggUGWi3VkBBEeMwpKlqbEtfZuoxj6JhMX" />
+                <div class="absolute inset-0 bg-gradient-to-r from-surface to-transparent"></div>
+            </div>
+            <div class="relative z-10 max-w-7xl mx-auto px-8 py-24 grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8">
+                    <h1
+                        class="font-headline font-extrabold text-5xl md:text-7xl text-primary editorial-text leading-[1.1]">
+                        Otimize Processos. <br />
+                        <span class="text-on-primary-container">Maximize Lucros.</span> <br />
+                        Conecte sua Indústria ao Futuro.
+                    </h1>
+                    <p class="text-lg md:text-xl text-on-surface-variant max-w-lg leading-relaxed">
+                        Consultoria especializada em processos, custos e inteligência de negócios aliada ao
+                        desenvolvimento de aplicações gerenciais sob medida.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button
+                            class="bg-primary text-on-primary px-8 py-4 rounded-[0.125rem] font-bold text-lg hover:opacity-90 transition-all shadow-lg active:scale-95">
+                            Agende um Diagnóstico Gratuito
+                        </button>
+                    </div>
+                </div>
+                <div class="hidden md:block relative">
+                    <div class="bg-primary p-1 absolute -top-8 -right-8 w-24 h-24 opacity-20"></div>
+                    <img class="rounded-[0.125rem] shadow-2xl relative z-10 w-full h-[500px] object-cover"
+                        data-alt="Professional industrial consultant in a clean modern factory floor, holding and looking at a digital tablet while observing the production process."
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKB2yuTF_A4IIP8lK_gfqohdA_3l8eAbieOjhq_4PeDWZ2mzdEhsthGE64x1kVeSbKf-s426xj4Vlc2NeJU6XxP18JLv9qYxLSvubyeB8zHHIa24f6tlbNilH3BKuo46f2TQqZiBdDry1UhDdDOtncD4S6N1o01iutnxheU5d8haV01T-98KrsjCira426tCq3zv7cEFyEQ7AdBou9QNMoRt8nNj-hlE5ObJE_x-dhY9eVeewr2-TXm2R4b-mhXPGKdro7yTBCEpcZ" />
+                    <div
+                        class="absolute -bottom-6 -left-6 bg-tertiary-fixed text-on-tertiary-fixed p-6 rounded-[0.125rem] shadow-xl z-20">
+                        <span class="font-headline font-bold text-4xl">15+</span>
+                        <p class="text-xs uppercase tracking-widest font-semibold">Anos de Expertise</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Services Section -->
+        <section class="py-24 bg-surface" id="servicos">
+            <div class="max-w-7xl mx-auto px-8">
+                <div class="mb-16">
+                    <span class="text-tertiary-fixed-dim font-bold tracking-[0.2em] uppercase text-sm">Expertise</span>
+                    <h2 class="text-4xl font-headline font-extrabold text-primary mt-2">Nossas Soluções</h2>
+                </div>
+                <div class="asymmetric-grid">
+                    <!-- Service Card 1 -->
+                    <div
+                        class="bg-surface-container-lowest p-8 h-[400px] flex flex-col justify-between group hover:bg-primary transition-colors duration-500 rounded-[0.125rem] shadow-sm">
+                        <div class="space-y-6">
+                            <span
+                                class="material-symbols-outlined text-4xl text-primary group-hover:text-tertiary-fixed transition-colors">factory</span>
+                            <h3 class="text-2xl font-headline font-bold text-primary group-hover:text-white">Análise de
+                                Processos Industriais</h3>
+                            <p class="text-on-surface-variant group-hover:text-slate-300">Identificação de gargalos e
+                                redesenho de fluxos produtivos para máxima eficiência operacional.</p>
+                        </div>
+                        <div class="w-12 h-1 bg-tertiary-fixed"></div>
+                    </div>
+                    <!-- Service Card 2 -->
+                    <div
+                        class="bg-surface-container p-8 h-[440px] flex flex-col justify-between group hover:bg-primary transition-colors duration-500 rounded-[0.125rem] shadow-sm">
+                        <div class="space-y-6">
+                            <span
+                                class="material-symbols-outlined text-4xl text-primary group-hover:text-tertiary-fixed transition-colors">payments</span>
+                            <h3 class="text-2xl font-headline font-bold text-primary group-hover:text-white">Custeio
+                                Industrial</h3>
+                            <p class="text-on-surface-variant group-hover:text-slate-300">Estruturação de modelos de
+                                custos precisos para garantir a rentabilidade real de cada produto.</p>
+                        </div>
+                        <div class="w-12 h-1 bg-tertiary-fixed"></div>
+                    </div>
+                    <!-- Service Card 3 -->
+                    <div
+                        class="bg-surface-container-lowest p-8 h-[400px] flex flex-col justify-between group hover:bg-primary transition-colors duration-500 rounded-[0.125rem] shadow-sm">
+                        <div class="space-y-6">
+                            <span
+                                class="material-symbols-outlined text-4xl text-primary group-hover:text-tertiary-fixed transition-colors">monitoring</span>
+                            <h3 class="text-2xl font-headline font-bold text-primary group-hover:text-white">Análise de
+                                Negócios (BI)</h3>
+                            <p class="text-on-surface-variant group-hover:text-slate-300">Transformação de dados brutos
+                                em dashboards estratégicos para tomada de decisão em tempo real.</p>
+                        </div>
+                        <div class="w-12 h-1 bg-tertiary-fixed"></div>
+                    </div>
+                    <!-- Service Card 4 -->
+                    <div
+                        class="bg-surface-container p-8 h-[440px] flex flex-col justify-between group hover:bg-primary transition-colors duration-500 rounded-[0.125rem] shadow-sm">
+                        <div class="space-y-6">
+                            <span
+                                class="material-symbols-outlined text-4xl text-primary group-hover:text-tertiary-fixed transition-colors">developer_mode_tv</span>
+                            <h3 class="text-2xl font-headline font-bold text-primary group-hover:text-white">Aplicações
+                                Personalizadas</h3>
+                            <p class="text-on-surface-variant group-hover:text-slate-300">Sistemas sob medida que
+                                integram suas regras de negócio ao ecossistema digital da sua empresa.</p>
+                        </div>
+                        <div class="w-12 h-1 bg-tertiary-fixed"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Who We Are -->
+        <section class="py-24 bg-surface-container-low overflow-hidden" id="quem-somos">
+            <div class="max-w-7xl mx-auto px-8 grid md:grid-cols-12 gap-16 items-center">
+                <div class="md:col-span-5 space-y-6">
+                    <span class="text-primary-container font-bold tracking-[0.2em] uppercase text-sm">Sobre Nós</span>
+                    <h2 class="text-4xl font-headline font-extrabold text-primary leading-tight">Arquitetos de
+                        Eficiência Digital</h2>
+                    <p class="text-on-surface-variant leading-relaxed">
+                        A Sagacitas Consulting nasceu da união entre o rigor da engenharia industrial e a agilidade do
+                        desenvolvimento de software. Acreditamos que a tecnologia deve servir ao processo, e não o
+                        contrário.
+                    </p>
+                    <p class="text-on-surface-variant leading-relaxed">
+                        Nossa equipe é composta por consultores seniores com décadas de experiência no chão de fábrica e
+                        desenvolvedores especialistas em arquitetura de dados industrial.
+                    </p>
+                </div>
+                <div class="md:col-span-7 grid grid-cols-2 gap-4">
+                    <div class="space-y-4 pt-12">
+                        <div class="bg-surface-container-lowest p-4 rounded-[0.125rem] shadow-sm">
+                            <img class="w-full h-64 object-cover mb-4 grayscale hover:grayscale-0 transition-all duration-500"
+                                data-alt="Professional portrait of a male senior industrial consultant in his 40s wearing a crisp white shirt, clean industrial workshop background in soft focus."
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLu-KtI7PdpRW1dwXZ2Q7LqgJ9yVk6BIY_W-DlqvF8tmg_Mbhe49zXVXVcZVR9HtZ--IiIZcDxU3hK37r-1I2dcAeYpf0fmzaP81y5hEoKq9axySMF-fZn4evvBM6eUunKHCur3n8x8x4KWbXhL1W7AfuJ0Fy2zAI09LGfGJPJjYtWJtr0KQ9QK-vAMintOSpaZjTqUGVb92g7P-QEr1RSvDPciKNLePchYtdKP6LeTjcEosG0BXfXdrTGCvrSvkJdzTJe_lkRJ-fZ" />
+                            <h4 class="font-headline font-bold text-primary">Eng. Ricardo Lima</h4>
+                            <p class="text-xs text-on-surface-variant uppercase tracking-tighter">Sócio Diretor -
+                                Processos</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-surface-container-lowest p-4 rounded-[0.125rem] shadow-sm">
+                            <img class="w-full h-64 object-cover mb-4 grayscale hover:grayscale-0 transition-all duration-500"
+                                data-alt="Professional portrait of a female software architect in business attire, confident expression, standing in front of a modern glass office wall with tech-industrial reflections."
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0qeFJ7FD8UePQr4qo2r7nN5G--NaQv_Z-wrM5haW2bXX9kfvvEVIRFEt--eF8vU-ChUkJBV4kkQ7nIUsuLh7V6QgMs4SYdm6CWNNyxCwwfghEsMOn-e7Q1eLNvGS9AHvDBv-s_AFw5JlHdqGGCn9y4ovJuA4PDguOtfKP_C823pMRfQGtba0YrLXu65r92Bzt5aB36LY0CrE7TiEt0TxpVoOkRorY5D44bHGVqfmJRLNTu0wzMDiR9gzKUpEC8-5fBDpJ4qvzsSWF" />
+                            <h4 class="font-headline font-bold text-primary">Dra. Helena Souza</h4>
+                            <p class="text-xs text-on-surface-variant uppercase tracking-tighter">Head de Tecnologia
+                                &amp; BI</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Client Portal (Simulated) -->
+        <section class="py-24 bg-primary text-on-primary">
+            <div class="max-w-7xl mx-auto px-8">
+                <div class="text-center mb-16 max-w-2xl mx-auto">
+                    <h2 class="text-4xl font-headline font-extrabold mb-4">Seus Aplicativos de Gestão</h2>
+                    <p class="text-on-primary-container text-lg">Acesse suas ferramentas exclusivas e dashboards em
+                        tempo real através do nosso ecossistema integrado.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- App 1 -->
+                    <div
+                        class="bg-white/5 backdrop-blur-xl p-8 border border-white/10 rounded-lg hover:border-tertiary-fixed transition-colors">
+                        <span class="material-symbols-outlined text-4xl text-tertiary-fixed mb-6">dashboard</span>
+                        <h3 class="text-xl font-headline font-bold mb-4">Dashboard de Produção</h3>
+                        <p class="text-slate-400 mb-8 text-sm">Visualize o OEE, paradas de linha e performance por turno
+                            em tempo real.</p>
+                        <button
+                            class="w-full py-3 border border-tertiary-fixed text-tertiary-fixed font-bold hover:bg-tertiary-fixed hover:text-primary transition-all">
+                            Acessar Aplicação
+                        </button>
+                    </div>
+                    <!-- App 2 -->
+                    <div
+                        class="bg-white/5 backdrop-blur-xl p-8 border border-white/10 rounded-lg hover:border-tertiary-fixed transition-colors">
+                        <span class="material-symbols-outlined text-4xl text-tertiary-fixed mb-6">calculate</span>
+                        <h3 class="text-xl font-headline font-bold mb-4">Simulador de Custos</h3>
+                        <p class="text-slate-400 mb-8 text-sm">Realize simulações What-If de precificação e custos de
+                            matéria-prima.</p>
+                        <button
+                            class="w-full py-3 border border-tertiary-fixed text-tertiary-fixed font-bold hover:bg-tertiary-fixed hover:text-primary transition-all">
+                            Acessar Aplicação
+                        </button>
+                    </div>
+                    <!-- App 3 -->
+                    <div
+                        class="bg-white/5 backdrop-blur-xl p-8 border border-white/10 rounded-lg hover:border-tertiary-fixed transition-colors">
+                        <span class="material-symbols-outlined text-4xl text-tertiary-fixed mb-6">inventory_2</span>
+                        <h3 class="text-xl font-headline font-bold mb-4">Controle de Inventário</h3>
+                        <p class="text-slate-400 mb-8 text-sm">Gestão inteligente de estoque com previsibilidade baseada
+                            em demanda.</p>
+                        <button
+                            class="w-full py-3 border border-tertiary-fixed text-tertiary-fixed font-bold hover:bg-tertiary-fixed hover:text-primary transition-all">
+                            Acessar Aplicação
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Partners / Clients Bar -->
+        <section class="py-12 bg-surface-container" id="clientes">
+            <div class="max-w-7xl mx-auto px-8 overflow-hidden">
+                <p class="text-center text-xs uppercase tracking-[0.3em] font-bold text-outline mb-8">Indústrias que
+                    confiam em nossa arquitetura</p>
+                <div
+                    class="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-50 grayscale hover:grayscale-0 transition-all duration-700">
+                    <img class="h-8 w-auto" data-alt="Industrial company logo in grayscale minimalist style"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwl13HHMiK8VltCl-96-Hr3hwpiNZPz5h7o87qDsXkwmAiCb2mXJfNnnSAaqUtQlrIgwQQ6n1e6AyE7YFuHNtWkblZhhOxtmCgrFwJ-YwvSRKpr435O7rQMDokYIPDbBctCwfQzQ6BtO5w5NWSRnIl95uEDi0bVTJNlFY7WZAFMYzXHVTRVj2SBoavX4wmuMd6wUYLaSndAHx3yoDH1aqDLoYbgs0fxkvDDuJnI8YuBHnM1qBMN6PGCPKdpN9vyA_NBjj9Aq2A--6L" />
+                    <img class="h-10 w-auto" data-alt="Logistics company logo in grayscale minimalist style"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYTP-GBtvAlfuDfGJKxKwssxK-Oi_hAkft0rxMlSepmEKGF4Txb2AUclF9g6-5B1_TiDMmEmjCBnOnwtgq3U8LVCScc5bToAb6_Sqzt-XLGKkTNu4BecnbEynu3pxRB7e0XfpHTOHH7U2bpKiHIx_WOGJXrN6Tv3DQ0f1VqRshzlDhldxramHjBFIF6bb--I8LZ3e40JS6FiNIU7UCMjNSVgWwDipvbdZv0Zt8dz8P1R9wGex1JjHrvt3fxsakh42xh4gOMwMEsH88" />
+                    <img class="h-8 w-auto" data-alt="Manufacturing group logo in grayscale minimalist style"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuChx6jn0l_XL-C34pC-aw6_QkK_FZQfdCP-VpMFcbiC4nG6wlyaPj1JRGjJtFEvzGhPWHtgQTBKWddjn1vuJO6b5M1HTK1sxtEncRTu4FRtpsBluGhd0Dvp8jNijzMzFikG88zgatcj0q611QxYROJtD0UCys4w_QQcLKLt1gZI2BTM73YIGxSPBmIwrZ5_Ks9d2POuf_LqAajHQqZWL9-8VIvqqDmrRca062RlrJjjhFM7w0Y1WL_AjQ0yoQjSeseikpWxaM3KTBJU" />
+                    <img class="h-12 w-auto" data-alt="Tech industry logo in grayscale minimalist style"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxnTkgG4A7WD11ZQ3Dmmy5paef9L-UlGeUo9XVb35rbdwZ7swrFHlfkT7ZmpcdbRVS3ntghFTeAx5_9l_Om8z34tV0sq_vp_hXn-b1h1lHfKSZTmcjscB1WnV6ejrby8m2i3erNb5tpqU3zFHFVivSW2zhETiJ-SSa7f44-vFLB3EA2IDtoPM8u-Qzk89g23_RsFWz32tvqXdyIdbDo51Hw32WoLNO6d-5JPVVdbNfxeH3uCzcphFG70m-nnJ7jFZ-QzrjfqpbE_QD" />
+                    <img class="h-9 w-auto" data-alt="Chemical plant logo in grayscale minimalist style"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyoaLvVOr4ENGA9g252yHiHIDtVOnbcX8PZn5lN-tudH6RqUKbS7MscvdBLPyCNdx3q23VSljCuZEV_gE5h7PpEWRdUt9n4oKnNCJZpgElhXtNldPOpqLonily5JY9P8r-dzIkTUCp4eye_rLwhoFILqDFGzCbg1FCwJ3cUtEv8-X6JmTBJ0Y2I6nmz9uX6EDYXwKTU7aIT3Mp0jRyF8iCi-Mhw7Sjk-sL9lpHbMc2KcRxhj-bMv4tyEvfzrWnWsp900m6fCevG_fZ" />
+                </div>
+            </div>
+        </section>
+        <!-- CTA / Contact -->
+        <section class="py-24 bg-surface" id="contato">
+            <div
+                class="max-w-5xl mx-auto px-8 bg-surface-container-highest p-12 rounded-[0.125rem] shadow-2xl relative">
+                <div class="absolute -right-4 top-1/2 -translate-y-1/2 w-2 h-32 bg-primary"></div>
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h2 class="text-4xl font-headline font-extrabold text-primary mb-4">Pronto para o próximo nível?
+                        </h2>
+                        <p class="text-on-surface-variant mb-8">Nossos consultores estão prontos para analisar seu
+                            cenário e propor soluções que geram ROI real em menos de 6 meses.</p>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-4">
+                                <span class="material-symbols-outlined text-primary">mail</span>
+                                <span class="text-on-surface font-semibold">contato@sagacitas.com.br</span>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <span class="material-symbols-outlined text-primary">call</span>
+                                <span class="text-on-surface font-semibold">+55 27 99662-9143</span>
+                            </div>
+                        </div>
+                    </div>
+                    <form class="space-y-4">
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold uppercase tracking-wider text-outline">Seu Nome</label>
+                            <input
+                                class="w-full bg-surface-container-high border-none border-b-2 border-primary/20 focus:border-primary focus:ring-0 transition-all p-3"
+                                type="text" />
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold uppercase tracking-wider text-outline">E-mail
+                                Corporativo</label>
+                            <input
+                                class="w-full bg-surface-container-high border-none border-b-2 border-primary/20 focus:border-primary focus:ring-0 transition-all p-3"
+                                type="email" />
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold uppercase tracking-wider text-outline">Mensagem</label>
+                            <textarea
+                                class="w-full bg-surface-container-high border-none border-b-2 border-primary/20 focus:border-primary focus:ring-0 transition-all p-3"
+                                rows="3"></textarea>
+                        </div>
+                        <button
+                            class="w-full bg-primary text-white py-4 font-bold rounded-[0.125rem] hover:opacity-90 active:scale-95 transition-all">
+                            Enviar Solicitação
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-[#eceeef] w-full py-12 px-8 border-t border-slate-200">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto items-start">
+            <div class="space-y-4">
+                <div class="text-lg font-bold text-[#002630] font-headline">Sagacitas Consulting</div>
+                <p class="text-slate-500 text-sm leading-relaxed max-w-xs">Inteligência de processos e desenvolvimento
+                    de software industrial de alta performance.</p>
+            </div>
+            <div class="flex flex-col gap-3">
+                <span class="text-xs font-bold uppercase tracking-widest text-[#002630] mb-2">Navegação</span>
+                <a class="text-slate-500 hover:text-[#002630] text-sm transition-colors" href="#">Privacidade</a>
+                <a class="text-slate-500 hover:text-[#002630] text-sm transition-colors" href="#">Termos de Uso</a>
+                <a class="text-slate-500 hover:text-[#002630] text-sm transition-colors" href="#">Trabalhe Conosco</a>
+            </div>
+            <div class="md:text-right space-y-4">
+                <p class="text-slate-500 text-sm">© 2024 Sagacitas Consulting. Todos os direitos reservados.</p>
+                <div class="flex md:justify-end gap-4 text-primary">
+                    <span class="material-symbols-outlined cursor-pointer hover:opacity-70">linked_services</span>
+                    <span class="material-symbols-outlined cursor-pointer hover:opacity-70">hub</span>
+                    <span class="material-symbols-outlined cursor-pointer hover:opacity-70">language</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
