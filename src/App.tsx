@@ -187,7 +187,7 @@ const About = () => {
       <div className="max-w-7xl mx-auto px-8 grid md:grid-cols-12 gap-16 items-center">
         <div className="md:col-span-5 space-y-6">
           <span className="text-primary-container font-bold tracking-[0.2em] uppercase text-sm">Sobre Nós</span>
-          <h2 className="text-4xl font-headline font-extrabold text-primary leading-tight">Arquitetos de Eficiência Digital</h2>
+          <h2 className="text-4xl font-headline font-extrabold text-primary leading-tight">Arquitetos de Eficiência Empresarial</h2>
           <p className="text-on-surface-variant leading-relaxed">
             A Sagacitas Consulting nasceu da união entre o rigor da engenharia industrial e a agilidade do desenvolvimento de software. Acreditamos que a tecnologia deve servir ao processo, e não o contrário.
           </p>
@@ -200,12 +200,12 @@ const About = () => {
             <div className="bg-surface-container-lowest p-4 rounded-sm shadow-sm">
               <img
                 className="w-full h-64 object-cover mb-4 grayscale hover:grayscale-0 transition-all duration-500"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLu-KtI7PdpRW1dwXZ2Q7LqgJ9yVk6BIY_W-DlqvF8tmg_Mbhe49zXVXVcZVR9HtZ--IiIZcDxU3hK37r-1I2dcAeYpf0fmzaP81y5hEoKq9axySMF-fZn4evvBM6eUunKHCur3n8x8x4KWbXhL1W7AfuJ0Fy2zAI09LGfGJPJjYtWJtr0KQ9QK-vAMintOSpaZjTqUGVb92g7P-QEr1RSvDPciKNLePchYtdKP6LeTjcEosG0BXfXdrTGCvrSvkJdzTJe_lkRJ-fZ"
-                alt="Ricardo Lima"
+                src="/sergio-stulzer.jpg"
+                alt="Sergio Stulzer"
                 referrerPolicy="no-referrer"
               />
-              <h4 className="font-headline font-bold text-primary">Eng. Ricardo Lima</h4>
-              <p className="text-xs text-on-surface-variant uppercase tracking-tighter">Sócio Diretor - Processos</p>
+              <h4 className="font-headline font-bold text-primary">Sergio Stulzer</h4>
+              <p className="text-xs text-on-surface-variant uppercase tracking-tighter">Diretor - Engenharia e Administração</p>
             </div>
           </div>
           <div className="space-y-4">
@@ -216,8 +216,8 @@ const About = () => {
                 alt="Helena Souza"
                 referrerPolicy="no-referrer"
               />
-              <h4 className="font-headline font-bold text-primary">Dra. Helena Souza</h4>
-              <p className="text-xs text-on-surface-variant uppercase tracking-tighter">Head de Tecnologia & BI</p>
+              <h4 className="font-headline font-bold text-primary">João Delpuppo</h4>
+              <p className="text-xs text-on-surface-variant uppercase tracking-tighter">Contabilidade Estratégica</p>
             </div>
           </div>
         </div>
@@ -241,7 +241,7 @@ const ClientPortal = () => {
     },
     {
       icon: <Package className="w-10 h-10" />,
-      title: "Controle de Inventário",
+      title: "Controle Dinâmico de Ativos",
       desc: "Gestão inteligente de estoque com previsibilidade baseada em demanda."
     }
   ];
@@ -416,17 +416,17 @@ export default function App() {
       <ClientTable clients={clients} />
       <Footer />
       <Chatbot />
-      <ClientModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+      <ClientModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
         onSave={handleSaveClient}
       />
-      <VerifyClientModal 
+      <VerifyClientModal
         isOpen={isVerifyOpen}
         onClose={() => setIsVerifyOpen(false)}
         onVerify={handleVerify}
       />
-      <ScheduleModal 
+      <ScheduleModal
         isOpen={isScheduleOpen}
         onClose={() => setIsScheduleOpen(false)}
         client={selectedClient}
