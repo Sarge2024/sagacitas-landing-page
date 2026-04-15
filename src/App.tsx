@@ -243,6 +243,7 @@ const ClientPortal = () => {
       icon: <Package className="w-10 h-10" />,
       title: "Controle Dinâmico de Ativos",
       desc: "Gestão inteligente de estoque com previsibilidade baseada em demanda."
+      link: "https://manutencao-proativa-d77eee7d.base44.app"
     }
   ];
 
