@@ -189,10 +189,10 @@ const About = () => {
           <span className="text-primary-container font-bold tracking-[0.2em] uppercase text-sm">Sobre Nós</span>
           <h2 className="text-4xl font-headline font-extrabold text-primary leading-tight">Arquitetos de Eficiência Empresarial</h2>
           <p className="text-on-surface-variant leading-relaxed">
-            A Sagacitas Consulting nasceu da união entre o rigor da engenharia industrial e a agilidade do desenvolvimento de software. Acreditamos que a tecnologia deve servir ao processo, e não o contrário.
+            A Sagacitas Consulting nasceu da união entre o rigor da engenharia industrial e na visão da gestão eficiente de custos e otimização dos processos. Acreditamos que a tecnologia deve servir ao processo, e não o contrário.
           </p>
           <p className="text-on-surface-variant leading-relaxed">
-            Nossa equipe é composta por consultores seniores com décadas de experiência no chão de fábrica e desenvolvedores especialistas em arquitetura de dados industrial.
+            Nossa equipe é composta por consultores seniores com décadas de experiência no chão de fábrica e desenvolvedores especialistas em arquitetura de dados, focada na gestão de custeio industrial.
           </p>
         </div>
         <div className="md:col-span-7 grid grid-cols-2 gap-4">
@@ -212,11 +212,11 @@ const About = () => {
             <div className="bg-surface-container-lowest p-4 rounded-sm shadow-sm">
               <img
                 className="w-full h-64 object-cover mb-4 grayscale hover:grayscale-0 transition-all duration-500"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0qeFJ7FD8UePQr4qo2r7nN5G--NaQv_Z-wrM5haW2bXX9kfvvEVIRFEt--eF8vU-ChUkJBV4kkQ7nIUsuLh7V6QgMs4SYdm6CWNNyxCwwfghEsMOn-e7Q1eLNvGS9AHvDBv-s_AFw5JlHdqGGCn9y4ovJuA4PDguOtfKP_C823pMRfQGtba0YrLXu65r92Bzt5aB36LY0CrE7TiEt0TxpVoOkRorY5D44bHGVqfmJRLNTu0wzMDiR9gzKUpEC8-5fBDpJ4qvzsSWF"
-                alt="Helena Souza"
+                src="/joao-delpupo.png"
+                alt="João Delpupo"
                 referrerPolicy="no-referrer"
               />
-              <h4 className="font-headline font-bold text-primary">João Delpuppo</h4>
+              <h4 className="font-headline font-bold text-primary">João Delpupo</h4>
               <p className="text-xs text-on-surface-variant uppercase tracking-tighter">Contabilidade Estratégica</p>
             </div>
           </div>
@@ -242,7 +242,7 @@ const ClientPortal = () => {
     {
       icon: <Package className="w-10 h-10" />,
       title: "Controle Dinâmico de Ativos",
-      desc: "Gestão inteligente de estoque com previsibilidade baseada em demanda."
+      desc: "Gestão inteligente de estoque com previsibilidade baseada em demanda.",
       link: "https://manutencao-proativa-d77eee7d.base44.app"
     }
   ];
@@ -283,22 +283,58 @@ const ClientPortal = () => {
 
 const Partners = () => {
   const logos = [
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuBwl13HHMiK8VltCl-96-Hr3hwpiNZPz5h7o87qDsXkwmAiCb2mXJfNnnSAaqUtQlrIgwQQ6n1e6AyE7YFuHNtWkblZhhOxtmCgrFwJ-YwvSRKpr435O7rQMDokYIPDbBctCwfQzQ6BtO5w5NWSRnIl95uEDi0bVTJNlFY7WZAFMYzXHVTRVj2SBoavX4wmuMd6wUYLaSndAHx3yoDH1aqDLoYbgs0fxkvDDuJnI8YuBHnM1qBMN6PGCPKdpN9vyA_NBjj9Aq2A--6L",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuBYTP-GBtvAlfuDfGJKxKwssxK-Oi_hAkft0rxMlSepmEKGF4Txb2AUclF9g6-5B1_TiDMmEmjCBnOnwtgq3U8LVCScc5bToAb6_Sqzt-XLGKkTNu4BecnbEynu3pxRB7e0XfpHTOHH7U2bpKiHIx_WOGJXrN6Tv3DQ0f1VqRshzlDhldxramHjBFIF6bb--I8LZ3e40JS6FiNIU7UCMjNSVgWwDipvbdZv0Zt8dz8P1R9wGex1JjHrvt3fxsakh42xh4gOMwMEsH88",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuChx6jn0l_XL-C34pC-aw6_QkK_FZQfdCP-VpMFcbiC4nG6wlyaPj1JRGjJtFEvzGhPWHtgQTBKWddjn1vuJO6b5M1HTK1sxtEncRTu4FRtpsBluGhd0Dvp8jNijzMzFikG88zgatcj0q611QxYROJtD0UCys4w_QQcLKLt1gZI2BTM73YIGxSPBmIwrZ5_Ks9d2POuf_LqAajHQqZWL9-8VIvqqDmrRca062RlrJjjhFM7w0Y1WL_AjQ0yoQjSeseikpWxaM3KTBJU",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuDxnTkgG4A7WD11ZQ3Dmmy5paef9L-UlGeUo9XVb35rbdwZ7swrFHlfkT7ZmpcdbRVS3ntghFTeAx5_9l_Om8z34tV0sq_vp_hXn-b1h1lHfKSZTmcjscB1WnV6ejrby8m2i3erNb5tpqU3zFHFVivSW2zhETiJ-SSa7f44-vFLB3EA2IDtoPM8u-Qzk89g23_RsFWz32tvqXdyIdbDo51Hw32WoLNO6d-5JPVVdbNfxeH3uCzcphFG70m-nnJ7jFZ-QzrjfqpbE_QD",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuDyoaLvVOr4ENGA9g252yHiHIDtVOnbcX8PZn5lN-tudH6RqUKbS7MscvdBLPyCNdx3q23VSljCuZEV_gE5h7PpEWRdUt9n4oKnNCJZpgElhXtNldPOpqLonily5JY9P8r-dzIkTUCp4eye_rLwhoFILqDFGzCbg1FCwJ3cUtEv8-X6JmTBJ0Y2I6nmz9uX6EDYXwKTU7aIT3Mp0jRyF8iCi-Mhw7Sjk-sL9lpHbMc2KcRxhj-bMv4tyEvfzrWnWsp900m6fCevG_fZ"
+    "/logos/aplicar.png",
+    "/logos/chancellor.png",
+    "/logos/frum.png",
+    "/logos/gotardo.png",
+    "/logos/maranata.png",
+    "/logos/incubadora-ifes.png",
+    "/logos/republica-dos-paes.png",
+    "/logos/smartpop.png",
+    "/logos/wage.png",
+    "/logos/ybera-paris.png"
   ];
 
+  // Double the logos for a seamless infinite loop
+  const doubledLogos = [...logos, ...logos];
+
   return (
-    <section className="py-12 bg-surface-container" id="clientes">
-      <div className="max-w-7xl mx-auto px-8 overflow-hidden">
-        <p className="text-center text-xs uppercase tracking-[0.3em] font-bold text-outline mb-8">Indústrias que confiam em nossa arquitetura</p>
-        <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-50 grayscale hover:grayscale-0 transition-all duration-700">
-          {logos.map((logo, i) => (
-            <img key={i} className="h-8 md:h-10 w-auto" src={logo} alt="Partner Logo" referrerPolicy="no-referrer" />
+    <section className="py-20 bg-surface-container overflow-hidden" id="clientes">
+      <div className="max-w-7xl mx-auto px-8 mb-12">
+        <p className="text-center text-xs uppercase tracking-[0.3em] font-black text-outline/40">
+          Indústrias que confiam em nossa arquitetura
+        </p>
+      </div>
+      <div className="flex relative items-center">
+        {/* Gradient overlays for smooth fade edges */}
+        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-surface-container to-transparent z-10"></div>
+        <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-surface-container to-transparent z-10"></div>
+
+        <motion.div
+          className="flex gap-16 md:gap-32 items-center flex-nowrap"
+          animate={{
+            x: [0, "-50%"],
+          }}
+          transition={{
+            x: {
+              repeat: Infinity,
+              repeatType: "loop",
+              duration: 40,
+              ease: "linear",
+            },
+          }}
+        >
+          {doubledLogos.map((logo, i) => (
+            <div key={i} className="flex-shrink-0">
+              <img
+                className="h-10 md:h-14 w-auto grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-500 cursor-pointer"
+                src={logo}
+                alt="Partner Logo"
+                referrerPolicy="no-referrer"
+              />
+            </div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -353,7 +389,7 @@ const Footer = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto items-start">
         <div className="space-y-4">
           <div className="text-lg font-bold text-primary font-headline">Sagacitas Consulting</div>
-          <p className="text-on-surface-variant text-sm leading-relaxed max-w-xs">Inteligência de processos e desenvolvimento de software industrial de alta performance.</p>
+          <p className="text-on-surface-variant text-sm leading-relaxed max-w-xs">Inteligência de processos e desenvolvimento de soluções empresariais de alta performance.</p>
         </div>
         <div className="flex flex-col gap-3">
           <span className="text-xs font-bold uppercase tracking-widest text-primary mb-2">Navegação</span>
@@ -362,7 +398,7 @@ const Footer = () => {
           <a className="text-on-surface-variant hover:text-primary text-sm transition-colors" href="#">Trabalhe Conosco</a>
         </div>
         <div className="md:text-right space-y-4">
-          <p className="text-on-surface-variant text-sm">© 2024 Sagacitas Consulting. Todos os direitos reservados.</p>
+          <p className="text-on-surface-variant text-sm">© 2005 Sagacitas Consulting. Todos os direitos reservados.</p>
           <div className="flex md:justify-end gap-4 text-primary">
             <Linkedin className="w-5 h-5 cursor-pointer hover:opacity-70" />
             <Github className="w-5 h-5 cursor-pointer hover:opacity-70" />
