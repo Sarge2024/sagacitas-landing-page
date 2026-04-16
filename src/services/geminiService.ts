@@ -1,6 +1,25 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+let aiInstance: GoogleGenAI | null = null;
+
+function getAIInstance() {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  
+  // Check if key is missing or is the placeholder from .env.example
+  if (!apiKey || apiKey === "COLOQUE_SUA_CHAVE_AQUI" || apiKey.trim() === "") {
+    return null;
+  }
+
+  try {
+    if (!aiInstance) {
+      aiInstance = new GoogleGenAI({ apiKey });
+    }
+    return aiInstance;
+  } catch (error) {
+    console.error("Failed to initialize GoogleGenAI:", error);
+    return null;
+  }
+}
 
 const SYSTEM_INSTRUCTION = `
 Você é o assistente virtual da Sagacitas Consulting, uma consultoria especializada em otimização de processos industriais, gestão de custos e inteligência de negócios (BI).
@@ -27,8 +46,14 @@ Mantenha as respostas concisas e use bullet points quando apropriado.
 
 export async function getChatResponse(message: string, history: { role: "user" | "model"; parts: { text: string }[] }[]) {
   try {
+    const ai = getAIInstance();
+    
+    if (!ai) {
+      return "Desculpe, o serviço de chat está temporariamente indisponível (chave de API não configurada). Por favor, entre em contato conosco via e-mail ou telefone.";
+    }
+
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-1.5-flash", // Use a stable model name
       contents: [
         ...history,
         { role: "user", parts: [{ text: message }] }
