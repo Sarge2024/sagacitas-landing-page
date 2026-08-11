@@ -21,6 +21,11 @@ import { ClientModal, ClientData } from "./components/ClientModal";
 import { ClientTable } from "./components/ClientTable";
 import { VerifyClientModal } from "./components/VerifyClientModal";
 import { ScheduleModal } from "./components/ScheduleModal";
+import { useEffect } from "react";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { auth } from "./services/firebase";
+import { AuthModal } from "./components/AuthModal";
+import { ClientDashboard } from "./components/ClientDashboard";
 
 const Navbar = ({ onOpenModal }: { onOpenModal: () => void }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -226,7 +231,7 @@ const About = () => {
   );
 };
 
-const ClientPortal = () => {
+const ClientPortal = ({ onOpenAuth }: { onOpenAuth: () => void }) => {
   const apps = [
     {
       icon: <LayoutDashboard className="w-10 h-10" />,
@@ -269,7 +274,7 @@ const ClientPortal = () => {
                   Acessar Aplicação
                 </a>
               ) : (
-                <button className="w-full py-3 border border-tertiary-fixed text-tertiary-fixed font-bold hover:bg-tertiary-fixed hover:text-primary transition-all">
+                <button onClick={onOpenAuth} className="w-full py-3 border border-tertiary-fixed text-tertiary-fixed font-bold hover:bg-tertiary-fixed hover:text-primary transition-all">
                   Acessar Aplicação
                 </button>
               )}
@@ -356,7 +361,7 @@ const Contact = () => {
               </div>
               <div className="flex items-center gap-4">
                 <Phone className="text-primary w-5 h-5" />
-                <span className="text-on-surface font-semibold">+55 11 4002-8922</span>
+                <span className="text-on-surface font-semibold">+55 27 99662.9143</span>
               </div>
             </div>
           </div>
@@ -411,6 +416,8 @@ const Footer = () => {
 };
 
 export default function App() {
+  const [user, setUser] = useState<User | null>(null);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [clients, setClients] = useState<ClientData[]>([]);
 
@@ -419,6 +426,13 @@ export default function App() {
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState<ClientData | null>(null);
   const [pendingSchedule, setPendingSchedule] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const handleVerify = (email: string) => {
     const found = clients.find(c => c.email.toLowerCase() === email.toLowerCase());
@@ -441,13 +455,18 @@ export default function App() {
     }
   };
 
+  // Se o usuário estiver logado, renderiza a Área do Cliente (Dashboard)
+  if (user) {
+    return <ClientDashboard user={user} />;
+  }
+
   return (
     <div className="min-h-screen">
-      <Navbar onOpenModal={() => { setPendingSchedule(false); setIsModalOpen(true); }} />
+      <Navbar onOpenModal={() => setIsAuthOpen(true)} />
       <Hero onDiagnosticoClick={() => setIsVerifyOpen(true)} />
       <Services />
       <About />
-      <ClientPortal />
+      <ClientPortal onOpenAuth={() => setIsAuthOpen(true)} />
       <Partners />
       <Contact />
       <ClientTable clients={clients} />
@@ -467,6 +486,10 @@ export default function App() {
         isOpen={isScheduleOpen}
         onClose={() => setIsScheduleOpen(false)}
         client={selectedClient}
+      />
+      <AuthModal
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
       />
     </div>
   );

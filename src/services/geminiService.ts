@@ -4,7 +4,7 @@ let aiInstance: GoogleGenAI | null = null;
 
 function getAIInstance() {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-  
+
   // Check if key is missing or is the placeholder from .env.example
   if (!apiKey || apiKey === "COLOQUE_SUA_CHAVE_AQUI" || apiKey.trim() === "") {
     return null;
@@ -36,8 +36,8 @@ Informações sobre a Sagacitas:
   * Análise de Negócios (BI): Dashboards estratégicos para tomada de decisão.
   * Aplicações Personalizadas: Sistemas sob medida integrados ao ecossistema digital.
 - Diferencial: União entre rigor da engenharia industrial e agilidade do desenvolvimento de software.
-- Equipe: Consultores seniores e especialistas em arquitetura de dados.
-- Contato: contato@sagacitas.com.br | +55 11 4002-8922.
+- Equipe: Consultores seniores e especialistas em arquitetura de dados com foco na gestão de custos.
+- Contato: contato@sagacitas.com.br | +55 127 99662.9143.
 
 Tom de voz: Profissional, prestativo, técnico mas acessível, e focado em resultados (eficiência e lucro).
 Responda sempre em Português do Brasil.
@@ -47,7 +47,7 @@ Mantenha as respostas concisas e use bullet points quando apropriado.
 export async function getChatResponse(message: string, history: { role: "user" | "model"; parts: { text: string }[] }[]) {
   try {
     const ai = getAIInstance();
-    
+
     if (!ai) {
       return "Desculpe, o serviço de chat está temporariamente indisponível (chave de API não configurada). Por favor, entre em contato conosco via e-mail ou telefone.";
     }
