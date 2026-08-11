@@ -61,6 +61,12 @@ export const HeaderNav: React.FC = () => {
             Meus Cursos
           </button>
           <button
+            onClick={() => setCurrentView('wallet')}
+            className={currentView === 'wallet' ? activeTabClass : inactiveTabClass}
+          >
+            Gerenciar Acessos
+          </button>
+          <button
             onClick={() => setCurrentView('player')}
             className={currentView === 'player' ? activeTabClass : inactiveTabClass}
           >

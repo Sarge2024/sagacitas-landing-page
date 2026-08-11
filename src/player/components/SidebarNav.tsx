@@ -56,6 +56,14 @@ export const SidebarNav: React.FC = () => {
         </button>
 
         <button
+          onClick={() => setCurrentView('wallet')}
+          className={currentView === 'wallet' ? activeItemClass : inactiveItemClass}
+        >
+          <span className="material-symbols-outlined text-xl">group</span>
+          <span>Gerenciar Acessos</span>
+        </button>
+
+        <button
           onClick={() => setCurrentView('player')}
           className={currentView === 'player' ? activeItemClass : inactiveItemClass}
         >

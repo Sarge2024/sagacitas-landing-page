@@ -12,8 +12,9 @@ import { CourseEngineService } from '../services/CourseEngineService';
 import { ValidationEngineService, ValidationResult } from '../services/ValidationEngineService';
 import { TENANT_ID } from '../services/supabaseClient';
 import { useCourseStore } from './useCourseStore';
+import { useTelemetryStore } from './useTelemetryStore';
 
-export type ViewScreen = 'handshake' | 'dashboard' | 'trail' | 'player';
+export type ViewScreen = 'handshake' | 'dashboard' | 'trail' | 'player' | 'wallet';
 
 interface SystemLog {
   id: string;
@@ -218,7 +219,6 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
         activeNode.is_exempt_by_dnt
       );
 
-      // Update local progress list
       const updatedList = [...studentProgressList];
       const existingIdx = updatedList.findIndex(p => p.uc_id === activeNode.id);
       if (existingIdx >= 0) {
@@ -226,6 +226,9 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
       } else {
         updatedList.push(result.updatedProgress);
       }
+
+      // Envia assincronamente o resultado para a fila de Telemetria (HMAC Sign)
+      useTelemetryStore.getState().queueResult(result.updatedProgress);
 
       // Re-sync navigation tree with new progress
       const newNavTree = manifest

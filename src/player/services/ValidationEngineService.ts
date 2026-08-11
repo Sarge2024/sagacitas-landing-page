@@ -1,5 +1,4 @@
 import { StudentProgress, OAState } from '../types';
-import { getSupabaseClient, isSupabaseConfigured } from './supabaseClient';
 
 export interface ValidationResult {
   success: boolean;
@@ -67,36 +66,7 @@ export class ValidationEngineService {
       updated_at: new Date().toISOString(),
     };
 
-    // Attempt Supabase database update if client configured
-    if (isSupabaseConfigured()) {
-      try {
-        const supabase = getSupabaseClient();
-
-        // Upsert record into student_uc_progress table
-        const { error } = await supabase
-          .from('student_uc_progress')
-          .upsert(
-            {
-              student_id: studentId,
-              gc_id: gcId,
-              uc_id: ucId,
-              state: newState,
-              score: score,
-              is_exempt_by_dnt: is_exempt_by_dnt,
-              updated_at: new Date().toISOString(),
-            },
-            { onConflict: 'student_id,gc_id,uc_id' }
-          );
-
-        if (error) {
-          console.warn(`[ValidationEngineService] Supabase upsert notice (${error.message}). Syncing locally...`);
-        } else {
-          console.log('[ValidationEngineService] Registro de nota sincronizado no Supabase via RLS!');
-        }
-      } catch (err) {
-        console.warn('[ValidationEngineService] Erro na requisição Supabase:', err);
-      }
-    }
+    // Retorna o resultado para ser processado pela fila de telemetria
 
     return {
       success: true,
