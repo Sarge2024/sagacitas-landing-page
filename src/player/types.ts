@@ -4,7 +4,7 @@
 
 export type OAState = 'LOCKED' | 'AVAILABLE' | 'IN_PROGRESS' | 'COMPLETED' | 'REMEDIATION';
 
-export type OAType = 'video' | 'lab' | 'quiz' | 'project' | 'simulator';
+export type OAType = 'video' | 'lab' | 'quiz' | 'project' | 'simulator' | 'simulator_dre';
 
 export interface LearningObject {
   id: string; // uc_id (Unidade Curricular / OA)

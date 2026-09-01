@@ -14,7 +14,7 @@ import { TENANT_ID } from '../services/supabaseClient';
 import { useCourseStore } from './useCourseStore';
 import { useTelemetryStore } from './useTelemetryStore';
 
-export type ViewScreen = 'handshake' | 'dashboard' | 'trail' | 'player' | 'wallet';
+export type ViewScreen = 'handshake' | 'dashboard' | 'trail' | 'player' | 'wallet' | 'oa_player';
 
 interface SystemLog {
   id: string;
@@ -196,7 +196,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     const dntInstruction = CourseEngineService.evaluateDntRouting(ucId, studentProgressList, manifest);
     get().addLog('CourseEngineService', dntInstruction.message, dntInstruction.is_exempt_by_dnt ? 'success' : 'info');
 
-    set({ activeNode: target, activeUcId: ucId, currentView: 'player' });
+    set({ activeNode: target, activeUcId: ucId, currentView: 'oa_player' });
     useCourseStore.getState().selectActiveUc(ucId);
   },
 

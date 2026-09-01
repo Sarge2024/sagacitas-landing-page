@@ -6,3 +6,8 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Pastas não utilizadas / temporárias
+.temp/
+.refs/
+img/

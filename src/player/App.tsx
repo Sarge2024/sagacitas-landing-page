@@ -8,6 +8,7 @@ import { OAPlayerModal } from './components/OAPlayerModal';
 import { ServiceInspectorModal } from './components/ServiceInspectorModal';
 import { AuthHandshakeService } from './services/AuthHandshakeService';
 import { ClientWalletView } from './components/ClientWalletView';
+import { OAPlayerView } from './components/OAPlayerView';
 
 export default function App() {
   const { currentView, runHandshake, session } = usePlayerStore();
@@ -42,6 +43,7 @@ export default function App() {
         </>
       )}
       {currentView === 'wallet' && <ClientWalletView />}
+      {currentView === 'oa_player' && <OAPlayerView />}
 
       {/* Global Inspector Modal for B2B SDK Debugging */}
       <ServiceInspectorModal />

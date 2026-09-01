@@ -16,15 +16,17 @@ import {
   FileSpreadsheet, 
   CheckCircle,
   Clock,
-  GraduationCap
+  GraduationCap,
+  Home
 } from "lucide-react";
 import PlayerApp from "../player/App";
 
 interface ClientDashboardProps {
   user: User;
+  onReturn: () => void;
 }
 
-export const ClientDashboard = ({ user }: ClientDashboardProps) => {
+export const ClientDashboard = ({ user, onReturn }: ClientDashboardProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard");
 
@@ -55,11 +57,11 @@ export const ClientDashboard = ({ user }: ClientDashboardProps) => {
       status: "Em Produção"
     },
     {
-      title: "Simulador de Investimentos",
-      desc: "Realize simulações What-If de precificação e custos de matéria-prima.",
+      title: "Gestor de Obras",
+      desc: "Orçamento, Planejamento e Gestão Financeira e Executiva.",
       icon: <Calculator className="w-8 h-8 text-primary" />,
-      actionText: "Acessar Simulador",
-      link: "https://invest-pro-bc4cf4a1.base44.app",
+      actionText: "Acessar Aplicação",
+      link: "/work_manager/index.html",
       status: "Disponível"
     },
     {
@@ -115,6 +117,16 @@ export const ClientDashboard = ({ user }: ClientDashboardProps) => {
             <Settings className="w-4 h-4" />
             Configurações
           </button>
+
+          <div className="pt-4 mt-4 border-t border-primary-container">
+            <button 
+              onClick={onReturn}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded text-sm font-semibold transition-all text-slate-300 hover:bg-primary-container/50 hover:text-white"
+            >
+              <Home className="w-4 h-4" />
+              Voltar ao Site
+            </button>
+          </div>
         </nav>
 
         {/* Sidebar Footer User Info */}
@@ -213,6 +225,16 @@ export const ClientDashboard = ({ user }: ClientDashboardProps) => {
                 <Settings className="w-4 h-4" />
                 Configurações
               </button>
+
+              <div className="pt-4 mt-4 border-t border-primary-container">
+                <button 
+                  onClick={() => { onReturn(); setIsMobileMenuOpen(false); }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded text-sm font-semibold text-slate-300 hover:text-white"
+                >
+                  <Home className="w-4 h-4" />
+                  Voltar ao Site
+                </button>
+              </div>
             </div>
           </motion.div>
         )}

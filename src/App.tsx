@@ -222,7 +222,17 @@ const About = () => {
                 referrerPolicy="no-referrer"
               />
               <h4 className="font-headline font-bold text-primary">João Delpupo</h4>
-              <p className="text-xs text-on-surface-variant uppercase tracking-tighter">Contabilidade Estratégica</p>
+              <p className="text-xs text-on-surface-variant uppercase tracking-tighter">Gestão e Orçamento Empresarial</p>
+            </div>
+            <div className="bg-surface-container-lowest p-4 rounded-sm shadow-sm">
+              <img
+                className="w-full h-64 object-cover mb-4 grayscale hover:grayscale-0 transition-all duration-500"
+                src="/Renato.jpeg"
+                alt="Carlos Renato"
+                referrerPolicy="no-referrer"
+              />
+              <h4 className="font-headline font-bold text-primary">Carlos Renato</h4>
+              <p className="text-xs text-on-surface-variant uppercase tracking-tighter">Gestão, Estratégia e Recuperação Judicial</p>
             </div>
           </div>
         </div>
@@ -240,9 +250,9 @@ const ClientPortal = ({ onOpenAuth }: { onOpenAuth: () => void }) => {
     },
     {
       icon: <Calculator className="w-10 h-10" />,
-      title: "Simulador de Investimentos",
-      desc: "Realize simulações What-If de precificação e custos de matéria-prima.",
-      link: "https://invest-pro-bc4cf4a1.base44.app"
+      title: "Gestor de Obras",
+      desc: "Orçamento, Planejamento e Gestão Financeira e Executiva.",
+      link: "/work_manager/index.html"
     },
     {
       icon: <Package className="w-10 h-10" />,
@@ -417,6 +427,7 @@ const Footer = () => {
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
+  const [showDashboard, setShowDashboard] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [clients, setClients] = useState<ClientData[]>([]);
@@ -455,18 +466,26 @@ export default function App() {
     }
   };
 
+  const handleOpenClientArea = () => {
+    if (user) {
+      setShowDashboard(true);
+    } else {
+      setIsAuthOpen(true);
+    }
+  };
+
   // Se o usuário estiver logado, renderiza a Área do Cliente (Dashboard)
-  if (user) {
-    return <ClientDashboard user={user} />;
+  if (user && showDashboard) {
+    return <ClientDashboard user={user} onReturn={() => setShowDashboard(false)} />;
   }
 
   return (
     <div className="min-h-screen">
-      <Navbar onOpenModal={() => setIsAuthOpen(true)} />
+      <Navbar onOpenModal={handleOpenClientArea} />
       <Hero onDiagnosticoClick={() => setIsVerifyOpen(true)} />
       <Services />
       <About />
-      <ClientPortal onOpenAuth={() => setIsAuthOpen(true)} />
+      <ClientPortal onOpenAuth={handleOpenClientArea} />
       <Partners />
       <Contact />
       <ClientTable clients={clients} />

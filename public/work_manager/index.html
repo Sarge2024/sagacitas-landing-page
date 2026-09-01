@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Works Manager — Sistema Modular de Planejamento e Gestão de Obras</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Works Manager: sistema modular comercial para planejamento, orçamento, execução e gestão financeira de obras de infraestrutura. Cadastros, orçamento paramétrico, cronograma, RDO, custos e BDI em um único painel." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1220;
+  --surface:#ffffff;
+  --ink:#0f172a;
+  --muted:#475569;
+  --primary:#005daa;
+  --primary-deep:#0b2a4a;
+  --primary-bg:#eff6ff;
+  --emerald:#10b981;
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --indigo:#4f46e5;
+  --line:#e2e8f0;
+  --soft:#f1f5f9;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#f8fafc;color:var(--ink);font-family:'Inter',-apple-system,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased}
+.page{max-width:1180px;margin:0 auto;background:var(--surface)}
+section{padding:60px 56px;border-bottom:1px solid var(--line)}
+section:last-child{border-bottom:0}
+.eyebrow{display:inline-block;padding:6px 12px;background:#e6f4f1;color:var(--primary-deep);border-radius:6px;font-size:12px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase}
+h1{font-size:46px;line-height:1.08;font-weight:900;letter-spacing:-0.02em;margin:18px 0 14px}
+h1 .grad{background:linear-gradient(90deg,var(--primary) 0%,var(--primary-deep) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-size:30px;font-weight:800;letter-spacing:-0.015em;margin-bottom:8px}
+h2 .bolder{font-weight:900}
+h3{font-size:18px;font-weight:800;margin-bottom:6px;letter-spacing:-0.01em}
+.lede{font-size:17px;color:var(--muted);line-height:1.55;max-width:680px}
+.hero{background:radial-gradient(1200px 600px at 90% -10%,#0b2a4a 0%,#0b1220 60%);color:#fff;padding:80px 56px 64px}
+.hero h1{color:#fff}
+.hero h1 .grad{background:linear-gradient(90deg,#5eead4,#a7f3d0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .lede{color:#cbd5e1}
+.hero .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.hero .pill{font-size:12px;font-weight:600;padding:6px 10px;border:1px solid rgba(255,255,255,0.18);border-radius:6px;color:#cbd5e1}
+.hero .pill b{color:#5eead4}
+.cta-row{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:6px;font-size:15px;font-weight:600;text-decoration:none;cursor:pointer;transition:transform 0.06s ease, background-color 0.15s ease}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--primary);color:#fff}
+.btn.primary:hover{background:var(--primary-deep)}
+.btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.3)}
+.btn.ghost:hover{background:rgba(255,255,255,0.08)}
+.btn.solid-dark{background:#fff;color:var(--primary-deep)}
+.module{display:grid;grid-template-columns:1fr 1.1fr;gap:36px;align-items:center}
+.module.reverse{grid-template-columns:1.1fr 1fr;direction:rtl}
+.module.reverse > *{direction:ltr}
+.module-tag{display:inline-block;padding:5px 10px;background:var(--primary-bg);color:var(--primary-deep);font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;border-radius:6px;margin-bottom:12px}
+.copy h2{margin-bottom:10px}
+.copy p{color:var(--muted);font-size:15.5px;line-height:1.6;margin-bottom:12px}
+.copy ul.bullets{margin:10px 0 4px 0;padding:0;list-style:none}
+.copy ul.bullets li{font-size:14px;color:var(--ink);padding:5px 0 5px 22px;position:relative}
+.copy ul.bullets li::before{content:'✓';position:absolute;left:0;top:5px;color:var(--primary);font-weight:800}
+.screenshot{border-radius:6px;overflow:hidden;border:1px solid var(--line);background:#0b1220;box-shadow:0 2px 4px rgba(2,6,23,0.05);position:relative}
+.screenshot img{display:block;width:100%;height:auto}
+.screenshot .badge{position:absolute;top:10px;left:10px;background:rgba(255,255,255,0.92);color:var(--primary-deep);padding:4px 8px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase}
+.modules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+.mcard{background:#fff;border:1px solid var(--line);border-radius:6px;padding:18px}
+.mcard h3{font-size:15px;font-weight:800;margin-bottom:4px}
+.mcard p{font-size:13px;color:var(--muted);line-height:1.5}
+.mcard .tag{display:inline-block;font-size:10px;color:var(--primary);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px}
+.numeric{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+.final{background:linear-gradient(135deg,#0b2a4a,#0b1220);color:#fff;text-align:center;padding:84px 56px 80px}
+.final h2{color:#fff;font-size:38px}
+.final .hook{font-size:54px;font-weight:900;line-height:1.05;letter-spacing:-0.025em;margin:14px auto 12px;max-width:780px;background:linear-gradient(90deg,#5eead4,#a7f3d0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.final p{color:#cbd5e1;max-width:620px;margin:10px auto 22px;font-size:17px;line-height:1.55}
+.final .eyebrow{background:rgba(94,234,212,0.18);color:#a7f3d0}
+.final .perks{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:34px auto 30px;max-width:920px;text-align:left}
+.final .perk{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:18px}
+.final .perk h3{color:#5eead4;font-size:14px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px}
+.final .perk p{color:#cbd5e1;font-size:14px;margin:0}
+.final .cta-row{justify-content:center;margin-top:6px}
+.final .btn.primary{background:#10b981}
+.final .btn.primary:hover{background:#059669}
+.final .btn.alt{background:#ffffff;color:var(--primary-deep)}
+.footer{padding:28px 56px;background:#0b1220;color:#94a3b8;font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.footer strong{color:#e2e8f0}
+@media (max-width:880px){
+  section{padding:42px 24px}
+  .hero{padding:60px 24px 48px}
+  h1{font-size:32px}
+  h2{font-size:22px}
+  .final h2{font-size:24px}
+  .final .hook{font-size:30px}
+  .module,.module.reverse{grid-template-columns:1fr;direction:ltr;gap:18px}
+  .modules-grid{grid-template-columns:1fr}
+  .final .perks{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HERO -->
+<section class="hero">
+  <span class="eyebrow">Works Manager · v1.1.0 · Sistema Modular Comercial</span>
+  <h1>Toda a obra, <span class="grad">na ponta do seu dedo.</span></h1>
+  <p class="lede">Cadastros, orçamento paramétrico, cronograma executivo, RDO em campo, custos e BDI em um único sistema modular. Licenciado por módulos — habilite o que sua operação precisa hoje e cresça sob demanda.</p>
+  <div class="meta">
+    <span class="pill"><b>5 módulos</b> integrados</span>
+    <span class="pill"><b>Mão de obra</b> por histogramas</span>
+    <span class="pill"><b>CUB · SINAPI</b> atualizados</span>
+    <span class="pill"><b>RDO</b> com idempotência</span>
+    <span class="pill"><b>Performance</b> de execução ponta a ponta</span>
+    <span class="pill"><b>Modelo SaaS</b> Multi-tenant</span>
+  </div>
+  <div class="cta-row">
+    <a class="btn primary" href="#modulos">Ver os módulos ↓</a>
+    <a class="btn ghost" href="#contato">Falar com um especialista</a>
+  </div>
+</section>
+
+<!-- Screenshot HERO -->
+<section style="background:#f8fafc">
+  <div class="screenshot" style="max-width:980px;margin:0 auto">
+    <span class="badge">Tela Inicial</span>
+    <img src="imagens/00-hero-inicio.png" alt="Tela inicial do Works Manager com logotipo e menu de navegação"/>
+  </div>
+</section>
+
+<!-- MÓDULO 01 — CADASTROS -->
+<section id="modulos">
+  <span class="eyebrow">Módulo 01 · Cadastros Operacionais</span>
+  <h2 style="margin-top:14px">Pessoas, especialidades e equipes <span class="bolder">compartilhadas entre obras.</span></h2>
+  <p class="lede" style="margin-top:8px">Três cadastros base que alimentam todas as outras partes do sistema: dimensionamento, OS, histograma e contratação.</p>
+</section>
+
+<section>
+  <div class="module">
+    <div class="screenshot">
+      <span class="badge">Cadastros · Funcionários</span>
+      <img src="imagens/01-funcionarios.png" alt="Gestão de Mão de Obra: KPIs de total, ativos em campo, alocados e especialidades, com quadro de funcionários"/>
+    </div>
+    <div class="copy">
+      <span class="module-tag">Funcionários</span>
+      <h2>Mão de obra sob gestão <span class="bolder">com KPIs em tempo real.</span></h2>
+      <p>Painel consolidado mostra total de funcionários, ativos em campo, alocados em equipes e catálogo de especialidades — com busca, filtros por fornecedora, especialidade e status.</p>
+      <ul class="bullets">
+        <li>31 funcionários ativos, 8 alocados em equipes</li>
+        <li>Filtros por fornecedora, especialidade e status</li>
+        <li>Vinculação automática comEquipe e OS</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="module reverse">
+    <div class="screenshot">
+      <span class="badge">Cadastros · Especialidades</span>
+      <img src="imagens/02-especialidades.png" alt="Catálogo de Especialidades: cards com 15 categorias (Armador, Cadista, Carpinteiro, Eletricista, Encanador)"/>
+    </div>
+    <div class="copy">
+      <span class="module-tag">Especialidades</span>
+      <h2>Catálogo de especialidades <span class="bolder">com contador de profissionais.</span></h2>
+      <p>Cada especialidade do catálogo exibe quantos funcionários estão vinculados, descrição da função e ações rápidas de gestão de competências, edição e inativação.</p>
+      <ul class="bullets">
+        <li>15 categorias padrões + customização por projeto</li>
+        <li>Botão <strong>Competências</strong> abre a matriz individual do profissional</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="module">
+    <div class="screenshot">
+      <span class="badge">Cadastros · Equipes</span>
+      <img src="imagens/03-equipes.png" alt="Gestão de Equipes Operacionais: lista à esquerda e detalhes (Ordem de Serviço e membros) à direita"/>
+    </div>
+    <div class="copy">
+      <span class="module-tag">Equipes</span>
+      <h2>Equipes operacionais <span class="bolder">com OS vinculada e membros mapeados.</span></h2>
+      <p>Cada equipe aponta a empresa fornecedora, o líder e os membros efetivos (N:N em relação ao cadastro de funcionários). Acompanha a OS que a equipe está executando e o serviço autorizado.</p>
+      <ul class="bullets">
+        <li>Cessão de pessoal entre empresas via módulo RH</li>
+        <li>Membros podem compor múltiplas equipes</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- MÓDULO 02 — ORÇAMENTO -->
+<section>
+  <span class="eyebrow">Módulo 02 · Orçamento de Obras</span>
+  <h2 style="margin-top:14px">Da <span class="bolder">tabela CUB</span> ao cronograma físico-financeiro <span class="bolder">na mesma sessão.</span></h2>
+  <p class="lede" style="margin-top:8px">Dois submódulos: orçamento paramétrico que projeta o custo global a partir da tabela CUB, e simulação de etapas que ajusta a participação por macroetapa com decomposição por Mão de Obra, Material, Equipamento e Ferramenta.</p>
+</section>
+
+<section>
+  <div class="module">
+    <div class="screenshot">
+      <span class="badge">Orçamento · Paramétrico</span>
+      <img src="imagens/04-orcamento-parametrico.png" alt="Orçamento Paramétrico: tipo de projeto (Edificações Convencionais / Rodovias), tabela CUB Sinduscon-BA 01/2026, custo base R$ 2.568,32"/>
+    </div>
+    <div class="copy">
+      <span class="module-tag">Orçamento Paramétrico</span>
+      <h2>Custo-base CUB × <span class="bolder">área e padrão construtivo.</span></h2>
+      <p>Escolha o tipo de projeto (Edificações Convencionais ou Rodovias), a tabela CUB vigente (Sinduscon-BA 01/2026, R$ 2.568,32/m²), tipologia e padrão — o sistema projeta o orçamento global em segundos, com fatores de densidade das etapas.</p>
+      <ul class="bullets">
+        <li>Versões salvas como rascunho para comparação</li>
+        <li>Sugestão IA sugere composições analíticas próprias</li>
+        <li>Inserção de aditivos eElevadores, Fundações Especiais</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="module reverse">
+    <div class="screenshot">
+      <span class="badge">Orçamento · Simulação</span>
+      <img src="imagens/05-simulacao-etapas.png" alt="Simulação de Etapas: sliders de participação por macroetapa e decomposição MO/MAT/EQP/FERR tendo como teto R$ 2.568.320,00"/>
+    </div>
+    <div class="copy">
+      <span class="module-tag">Simulação de Etapas</span>
+      <h2>Distribua <span class="bolder">100% entre macroetapas com decomposição auditada.</span></h2>
+      <p>Sliderscontrolam a participação de cada macroetapa dentro de uma faixa válida. Para cada etapa, você distribui Manutenção o percentual entre Mão de Obra, Material, Equipamento e Ferramenta. Status <strong>100%</strong> garante que a soma volta e a negociação global está consistente.</p>
+      <ul class="bullets">
+        <li>Guard-rail automático impede inconsistência na soma</li>
+        <li>Distribuição global sempre re-calculada em R$</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- MÓDULO 03 — OBRA -->
+<section>
+  <span class="eyebrow">Módulo 03 · Gestão da Obra</span>
+  <h2 style="margin-top:14px">Do <span class="bolder">projeto</span> ao <span class="bolder">histograma</span> com integração <span class="bolder">Google Calendar.</span></h2>
+  <p class="lede" style="margin-top:8px">Cinco submódulos operacionais: Projetos e EAP, Agenda do Projeto, Cronograma Executivo (Gantt), Físico-Financeiro distribuído por semana e Histograma de demanda de profissionais.</p>
+</section>
+
+<section>
+  <div class="module">
+    <div class="screenshot">
+      <span class="badge">Obra · Projetos EAP</span>
+      <img src="imagens/06-projetos-eap.png" alt="Estrutura Analítica de Projeto: 12 etapas hierárquicas com valor contratado, acumulado e percentual de execução"/>
+    </div>
+    <div class="copy">
+      <span class="module-tag">Projetos &amp; EAP</span>
+      <h2>Acompanhe a EAP <span class="bolder">com execução físico-financeira.</span></h2>
+      <p>Tabela hierárquica de 12+ etapas com valor contratado, acumulado e percentual de execução. Cada item vincula-se à unidade de medida (km, m², un), à fornecedora e à OS correspondente.</p>
+      <ul class="bullets">
+        <li>Importação de MS Project (.xml / .mpp)</li>
+        <li>Geração de cronograma financeiro semanal em 1 clique</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="module reverse">
+    <div class="screenshot">
+      <span class="badge">Obra · Agenda</span>
+      <img src="imagens/07-agenda-calendario.png" alt="Agenda do Projeto & Google Calendar API com eventos de marco de início, término, período, OS e feriados"/>
+    </div>
+    <div class="copy">
+      <span class="module-tag">Agenda &amp; Google Calendar</span>
+      <h2>Marcos do projeto <span class="bolder">visualizados no calendário mensal.</span></h2>
+      <p>Visualização consolidada com início de etapa, término, período, Ordens de Serviço e feriados integrados via Google Agenda. Sincronização 100% gratuita com Google Calendar via OAuth.</p>
+      <ul class="bullets">
+        <li>Filtros por Mês, Semana ou Dia</li>
+        <li>Importa feriados nacionais e estaduais automaticamente</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="module">
+    <div class="screenshot">
+      <span class="badge">Obra · Cronograma</span>
+      <img src="imagens/08-cronograma-gantt.png" alt="Cronograma Executivo com Gráfico de Gantt (SVAR) exibindo 12 etapas em 2026-2027"/>
+    </div>
+    <div class="copy">
+      <span class="module-tag">Cronograma Executivo</span>
+      <h2>Gráfico de Gantt de alta fidelidade <span class="bolder">com caminho crítico visual.</span></h2>
+      <p>Visualização interativa do cronograma de agosto/2026 até agosto/2027 com 12 etapas encadeadas, vinculo entre predecessoras e sucessoras e parametrizações por homem-hora. Exportação PDF ou imagem.</p>
+      <ul class="bullets">
+        <li>Monitor mensal com alertas de atraso</li>
+        <li>Parametrizar H/H por especialidade</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="module reverse">
+    <div class="screenshot">
+      <span class="badge">Obra · Físico-Financeiro</span>
+      <img src="imagens/09-fisico-financeiro.png" alt="Matriz Semanal de Custos distribuída por item da EAP, semanas S35-S43 e curva acumulada"/>
+    </div>
+    <div class="copy">
+      <span class="module-tag">Físico-Financeiro</span>
+      <h2>Distribuição semanal de custos <span class="bolder">com curva acumulada.</span></h2>
+      <p>Matriz semanal que mostra como o valor contratado de cada item da EAP se distribui nas 35 semanas planejadas de execução. Regeneração instantânea ao mexer no cronograma ou na curva S.</p>
+      <ul class="bullets">
+        <li>Editável via slider de percentual acumulado de cada semana</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="module">
+    <div class="screenshot">
+      <span class="badge">Obra · Histograma</span>
+      <img src="imagens/10-histograma.png" alt="Histograma de Mão de Obra por especialidade e mês, com totais por período em vagas (AGO/26 ABR/27)"/>
+    </div>
+    <div class="copy">
+      <span class="module-tag">Histograma</span>
+      <h2>Demanda de profissionais <span class="bolder">cruzada com a curva S.</span></h2>
+      <p>Dimensione sua equipe com base no cronograma: o histograma mostra quantos profissionais de cada especialidade o projeto exige por mês, respeitando o planejamento financeiro aprovado.</p>
+      <ul class="bullets">
+        <li>Visão Quinzenal ou Mensal</li>
+        <li>Total por especialidade ciente do aprendizado histórico</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="module reverse">
+    <div class="screenshot">
+      <span class="badge">Obra · Ordens de Serviço</span>
+      <img src="imagens/11-ordens-servico.png" alt="Formulário Emitir Nova Ordem de Serviço com campos de duração, EAP, equipe, responsável pelo RDO, MO/Materiais/Ferramentas/Equipamentos"/>
+    </div>
+    <div class="copy">
+      <span class="module-tag">Ordens de Serviço</span>
+      <h2>Emissão rápida de OS <span class="bolder">com vinculo a EAP, equipe e RDO.</span></h2>
+      <p>Formulário planejado para preenchimento em campo: número gerado automaticamente, data de emissão, duração, serviço autorizado (vinculado a item EAP), equipe alocada e responsável pelo RDO. Campos separados para Mão de Obra, Material, Ferramenta e Equipamento.</p>
+      <ul class="bullets">
+        <li>Aprovação por Gestor / Cliente em 1 clique</li>
+        <li>Equipamentos da Frota opcionais entram via seleção</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- MÓDULO 04 — RDO E MÉTRICAS -->
+<section>
+  <span class="eyebrow">Módulo 04 · RDO em Campo &amp; Métricas</span>
+  <h2 style="margin-top:14px">Espelho do que acontece na obra <span class="bolder">com a precisão que a operação exige.</span></h2>
+  <p class="lede" style="margin-top:8px">Carteira de avaliação dos RDOs recebidos e painel de métricas de sincronização, taxa de confirmação, fila pendente, evidências fotográficas e motivos de rejeição em frota.</p>
+</section>
+
+<section>
+  <div class="module">
+    <div class="screenshot">
+      <span class="badge">RDO · Recebidos</span>
+      <img src="imagens/12-rdos-recebidos.png" alt="Carteira de Avaliação de RDOs agrupada por OS com KPIs: Total RDOs, Aguardando Avaliação, Validados e Aprovados, Em Revisão"/>
+    </div>
+    <div class="copy">
+      <span class="module-tag">RDOs Recebidos</span>
+      <h2>Fila de RDOs por OS <span class="bolder">com 4 status e busca em lote.</span></h2>
+      <p>Visualize os Diários de Obra agrupados por Ordem de Serviço. Quatro status (Total, Aguardando Avaliação, Validados &amp; Aprovados, Em Revisão) alimentam filtros para identificar gargalos e priorizar pagamentos de medição.</p>
+      <ul class="bullets">
+        <li>Acesso por OS ou por RDO diretamente</li>
+        <li>RQ tem tempo entre aprovação consolidada na medição e</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="module reverse">
+    <div class="screenshot">
+      <span class="badge">RDO · Métricas</span>
+      <img src="imagens/13-metricas-rdo.png" alt="Métricas de Sucesso Campo & RDO: KPIs 94.2% TX Sincronização, 12 pendentes, 88% com evidência, 450ms online; gráfico de volume de sincronizações e rejeições em frota"/>
+    </div>
+    <div class="copy">
+      <span class="module-tag">Métricas RDO</span>
+      <h2>SLA <span class="bolder">94,2% de sincronização</span> com telemetria ponta a ponta.</h2>
+      <p>Painel executivo de operação: taxa de sincronização de RDOs no Edge, fila pendente com idade média, percentual de RDOs com evidências fotográficas e tempo médio online. As anomalias (idempotência, tentativas bloqueadas) são tratadas no Edge antes de subir para o backend.</p>
+      <ul class="bullets">
+        <li>Gráfico de sincronizações diárias por dia da semana</li>
+        <li>Porcentagem de rejeições em frota (regressão de leitura, conflito de turno, etc.)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- MÓDULO 05 — GESTÃO DE CUSTOS -->
+<section>
+  <span class="eyebrow">Módulo 05 · Gestão de Custos &amp; BDI</span>
+  <h2 style="margin-top:14px">Motor de cálculo de MO <span class="bolder">com fórmulas auditáveis.</span></h2>
+  <p class="lede" style="margin-top:8px">Três submódulos financeiros: Tabela Salarial de Referência (CBO + salário piso, médio, CUAI, Ferramentas FC), Custos Indiretos &amp; EPI/ferramentas e Matriz de Encargos Sociais SINAPI por grupos.</p>
+</section>
+
+<section>
+  <div class="module">
+    <div class="screenshot">
+      <span class="badge">Custos · Tabela Salarial</span>
+      <img src="imagens/14-tabela-salarial.png" alt="Tabela Salarial de Referência (SINAPI/CCT) por CBO com salário piso, médio, CUAI e ferramentas FC, por UF (Espírito Santo)"/>
+    </div>
+    <div class="copy">
+      <span class="module-tag">Tabela Salarial</span>
+      <h2>CBO + salário piso, médio, CUAI <span class="bolder">e ferramentas FC por UF.</span></h2>
+      <p>Catálogo indexado por CBO e por unidade federativa (Espírito Santo como exemplo), com referência SINAPI / CCT. Cada cargo exibe quatro indicadores: piso, salário médio, CUAI (Custo Unitário Adicional) e Ferramentas FC (Fornecimento por Cargo) — alimentam a composição de BDI.</p>
+      <ul class="bullets">
+        <li>Importação rápida para a composição por tenant</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="module reverse">
+    <div class="screenshot">
+      <span class="badge">Custos · Indiretos</span>
+      <img src="imagens/15-custos-indiretos.png" alt="Encargos Complementares e Custos Indiretos: tabela de encargos fixos universais, EPIs por função e fórmula matemática do custo hora"/>
+    </div>
+    <div class="copy">
+      <span class="module-tag">Custos Indiretos</span>
+      <h2><span class="bolder">Custo Real/h auditável:</span> salário_base / 191h × (1 + 85%) + encargos + EPI + ferramentas.</h2>
+      <p>Encargos fixos universais (alimentação, exames PCMSO, seguro de vida, transporte) e EPIs &amp; ferramentas organizados por função. A fórmula aparece visível na tela — sua equipe de planejamento entende como cada composição chega no número final.</p>
+      <ul class="bullets">
+        <li>Horas/mês configuráveis (191h padrão)</li>
+        <li>% de encargos calculada em runtime</li>
+        <li>Reflexo direto no Orçamento Paramétrico e na curva físico-financeira</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="module">
+    <div class="screenshot">
+      <span class="badge">Custos · Encargos Sociais</span>
+      <img src="imagens/16-encargos-sociais.png" alt="Matriz de Encargos Sociais SINAPI com Grupos A, B, C, D e E e alíquotas por item (INSS, SESI, FGTS, Repouso Semanal Remunerado)"/>
+    </div>
+    <div class="copy">
+      <span class="module-tag">Matriz SINAPI</span>
+      <h2>Encargos sociais <span class="bolder">por grupos A, B, C, D e E</span> com desoneração CPRB.</h2>
+      <p>Tabela SINAPI (8ª Edição) com todos os itens dos grupos A, B, C, D e E — INSS, SESI, FGTS, Repouso Semanal Remunerado, Salário Maternidade, Aviso Prévio, etc. — todos editáveis, com modo Horista ou Mensalista e toggle de Desoneração (CPRB).</p>
+      <ul class="bullets">
+        <li>Cálculo de BDI por macroetapa em segundos</li>
+        <li>Histórico de alterações por evento de auditoria</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="final" id="contato">
+  <span class="eyebrow">Próximo passo</span>
+  <h2>Gestão total e performance de execução</h2>
+  <p class="hook">Toda a obra, na ponta de seu dedo.</p>
+  <p>O Works Manager cobre a operação inteira — do orçamento paramétrico em CUB ao RDO em campo, do histograma de equipes à matriz de encargos SINAPI. Cinco módulos integrados, licenciados sob demanda conforme o tamanho da sua operação.</p>
+
+  <div class="perks">
+    <div class="perk">
+      <h3>Implantação orientada</h3>
+      <p>Onboarding guiado por especialista, com carga de tabelas SINAPI/CUB e SSO corporativo no seu IdP.</p>
+    </div>
+    <div class="perk">
+      <h3>Suporte Multi-tenant</h3>
+      <p>Múltiplas obras, múltiplas empresas ou contratos sob mesmo painel — isolamento por tenant.</p>
+    </div>
+    <div class="perk">
+      <h3>Roadmap transparente</h3>
+      <p>Roadmap pública disponível para clientes sob NDA. Sem lock-in: seus dados são seus.</p>
+    </div>
+  </div>
+
+  <div class="cta-row">
+    <a class="btn primary" href="mailto:contato@worksmanager.com.br?subject=Demonstração%20Works%20Manager">Solicitar demonstração</a>
+    <a class="btn alt" href="#modulos">Ver os módulos instalados</a>
+  </div>
+</section>
+
+<div class="footer">
+  <div><strong>Works Manager</strong> · Sistema Modular de Planejamento e Gestão de Obras</div>
+  <div>© 2026 Works Manager — Todos os direitos reservados</div>
+</div>
+
+</div>
+</body>
+</html>
