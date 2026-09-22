@@ -1,17 +1,61 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePlayerStore } from '../store/usePlayerStore';
+import { CourseManifestService } from '../services/CourseManifestService';
+import { CourseSummary } from '../types';
 import { HeaderNav } from './HeaderNav';
 import { MobileNav } from './MobileNav';
 
+interface CourseCard {
+  id: string;
+  title: string;
+  description: string;
+  progress: number;
+  status: string;
+  statusText: string;
+  image?: string;
+  icon?: string;
+  actionText: string;
+  isPrimary: boolean;
+  locked: boolean;
+}
+
 export const DashboardView: React.FC = () => {
   const { setCurrentView, loadCourse, searchQuery } = usePlayerStore();
+  const [realCourses, setRealCourses] = useState<CourseSummary[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    CourseManifestService.fetchAvailableCourseSummaries().then(summaries => {
+      if (!cancelled) setRealCourses(summaries);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleSelectCourse = (gcId: string) => {
     loadCourse(gcId);
     setCurrentView('trail');
   };
 
-  const courses = [
+  // Cursos reais publicados pelo Works Manager (via tabela `lessons`).
+  // Trilha completa (CourseManifestService.fetchManifest) ainda não constrói
+  // o grafo real a partir dessas aulas — por isso o card aparece, mas a ação
+  // fica "Em Breve" até essa ponte existir.
+  const realCourseCards: CourseCard[] = realCourses.map(course => ({
+    id: course.gc_id,
+    title: course.title,
+    description: course.description,
+    progress: 0,
+    status: 'EM_BREVE',
+    statusText: 'Em Breve',
+    icon: 'construction',
+    actionText: 'Em Breve',
+    isPrimary: false,
+    locked: true,
+  }));
+
+  const mockCourses: CourseCard[] = [
     {
       id: 'gc_logica_01',
       title: 'Fundamentos de Lógica',
@@ -50,6 +94,8 @@ export const DashboardView: React.FC = () => {
     },
   ];
 
+  const courses: CourseCard[] = [...realCourseCards, ...mockCourses];
+
   const filteredCourses = searchQuery
     ? courses.filter(
         c =>
@@ -87,11 +133,19 @@ export const DashboardView: React.FC = () => {
             >
               {/* Image Container */}
               <div className="h-48 w-full relative bg-[#dce9ff]">
-                <img
-                  src={course.image}
-                  alt={course.title}
-                  className={`w-full h-full object-cover ${course.locked ? 'opacity-60' : ''}`}
-                />
+                {course.image ? (
+                  <img
+                    src={course.image}
+                    alt={course.title}
+                    className={`w-full h-full object-cover ${course.locked ? 'opacity-60' : ''}`}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#dce9ff] to-[#c0c7d6]">
+                    <span className="material-symbols-outlined text-6xl text-[#005daa] opacity-70">
+                      {course.icon || 'school'}
+                    </span>
+                  </div>
+                )}
                 {course.statusText && !course.locked && (
                   <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-xs px-3 py-1 rounded-full border border-[#c0c7d6] text-[#005daa] font-['JetBrains_Mono'] text-xs font-medium">
                     {course.statusText}
@@ -100,7 +154,7 @@ export const DashboardView: React.FC = () => {
                 {course.locked && (
                   <div className="absolute inset-0 flex items-center justify-center bg-[#213145]/20 backdrop-blur-xs">
                     <span className="material-symbols-outlined text-4xl text-white drop-shadow">
-                      lock
+                      {course.status === 'EM_BREVE' ? 'schedule' : 'lock'}
                     </span>
                   </div>
                 )}
@@ -118,7 +172,7 @@ export const DashboardView: React.FC = () => {
                 {/* Progress Bar */}
                 <div className="mb-6">
                   <div className="flex justify-between font-['JetBrains_Mono'] text-xs text-[#404753] mb-2">
-                    <span>{course.locked ? 'Requer Módulo Anterior' : 'Progresso'}</span>
+                    <span>{course.locked ? course.statusText : 'Progresso'}</span>
                     {!course.locked && <span>{course.progress}%</span>}
                   </div>
                   <div className="w-full bg-[#e5eeff] rounded-full h-2 overflow-hidden">

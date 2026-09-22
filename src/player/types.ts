@@ -35,6 +35,13 @@ export interface ExecutionGraph {
   edges: GraphEdge[];
 }
 
+export interface CourseSummary {
+  gc_id: string;
+  title: string;
+  description: string;
+  lessonCount: number;
+}
+
 export interface CourseManifest {
   gc_id: string; // Grupo Curricular / Course ID
   title: string;

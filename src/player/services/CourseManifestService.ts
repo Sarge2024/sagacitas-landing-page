@@ -1,7 +1,55 @@
-import { CourseManifest } from '../types';
+import { CourseManifest, CourseSummary } from '../types';
 import { getSupabaseClient, TENANT_ID, isSupabaseConfigured } from './supabaseClient';
 
+// Nomes amigáveis para gc_id conhecidos, publicados via lessons pelo Works Manager.
+// Sem tabela de metadados de curso real ainda — cai no slug "humanizado" para gc_id desconhecidos.
+const FRIENDLY_COURSE_NAMES: Record<string, string> = {
+  'works-manager-basic': 'Gestor de Obras — Treinamento Essencial',
+};
+
+function humanizeGcId(gcId: string): string {
+  return FRIENDLY_COURSE_NAMES[gcId] ?? gcId.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
 export class CourseManifestService {
+  /**
+   * Busca os cursos reais publicados em `lessons` (agrupados por gc_id), para
+   * exibição de cards no Dashboard. Não depende de `course_manifests` (que
+   * não existe no banco real) — lê direto do acervo de aulas do Works Manager.
+   */
+  public static async fetchAvailableCourseSummaries(): Promise<CourseSummary[]> {
+    if (!isSupabaseConfigured()) return [];
+
+    try {
+      const supabase = getSupabaseClient();
+      const { data, error } = await supabase
+        .from('lessons')
+        .select('gc_id')
+        .not('gc_id', 'is', null);
+
+      if (error || !data) {
+        console.warn('[CourseManifestService] Falha ao buscar cursos reais de `lessons`:', error?.message);
+        return [];
+      }
+
+      const counts = new Map<string, number>();
+      for (const row of data as Array<{ gc_id: string | null }>) {
+        if (!row.gc_id) continue;
+        counts.set(row.gc_id, (counts.get(row.gc_id) ?? 0) + 1);
+      }
+
+      return Array.from(counts.entries()).map(([gc_id, lessonCount]) => ({
+        gc_id,
+        title: humanizeGcId(gc_id),
+        description: `${lessonCount} aula${lessonCount === 1 ? '' : 's'} publicadas pelo Works Manager.`,
+        lessonCount,
+      }));
+    } catch (err) {
+      console.warn('[CourseManifestService] Erro de rede ao buscar cursos reais:', err);
+      return [];
+    }
+  }
+
   /**
    * Fetches the CourseManifest JSON.
    * MUST include VITE_TENANT_ID in the query filter to enforce B2B licensing rules.
