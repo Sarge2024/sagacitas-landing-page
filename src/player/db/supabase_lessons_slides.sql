@@ -93,6 +93,10 @@ WITH CHECK (tenant_id IS NULL OR tenant_id = public.current_tenant_id());
 -- ------------------------------------------------------------------------------
 -- 2. STORAGE: BUCKET PÚBLICO `course-assets` (imagens inseridas no Markdown)
 -- ------------------------------------------------------------------------------
+-- SUPERSEDIDO em 2026-09-22: o upload de imagens do Class Studio migrou deste
+-- bucket para o Vercel Blob (ver api/blob-upload.ts e
+-- LessonEditorService.uploadImage), por performance. Mantido aqui só como
+-- histórico/idempotente; não precisa mais ser executado para imagens novas.
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('course-assets', 'course-assets', true)
 ON CONFLICT (id) DO NOTHING;

@@ -56,6 +56,13 @@ export const ClassStudioIndex: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-['Inter']">
       <header className="border-b border-slate-200 bg-white px-6 py-4">
+        <a
+          href="/"
+          className="flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700 mb-2 w-fit"
+        >
+          <span className="material-symbols-outlined text-sm">arrow_back</span>
+          Voltar ao Console de Treinamentos
+        </a>
         <h1 className="text-xl font-bold text-slate-800 flex items-center gap-2">
           <span className="material-symbols-outlined text-blue-600">edit_note</span>
           Class Studio

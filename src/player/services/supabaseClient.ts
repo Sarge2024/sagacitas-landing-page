@@ -63,13 +63,26 @@ export async function setSupabaseAuthToken(token: string): Promise<void> {
     return;
   }
 
-  const client = getSupabaseClient();
+  // Re-cria a instância para forçar o novo header global (Authorization: Bearer token)
+  const url = supabaseUrl || 'https://placeholder-tenant.supabase.co';
+  const key = supabaseAnonKey || 'placeholder-anon-key';
 
-  // Inject session into Supabase client auth engine
+  supabaseInstance = createClient(url, key, {
+    auth: {
+      persistSession: false, // Não tentamos gerenciar a sessão localmente pelo Supabase
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+    },
+    global: {
+      headers: { Authorization: `Bearer ${currentAccessToken}` },
+    },
+  });
+
+  // Também tentamos registrar a sessão para compatibilidade com o módulo Storage (opcional)
   try {
-    const { error } = await client.auth.setSession({
+    const { error } = await supabaseInstance.auth.setSession({
       access_token: token,
-      refresh_token: '',
+      refresh_token: 'dummy-refresh-token', // Evita o erro 'Auth session missing'
     });
 
     if (error) {

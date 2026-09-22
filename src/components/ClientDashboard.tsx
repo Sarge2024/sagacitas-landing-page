@@ -68,9 +68,9 @@ export const ClientDashboard = ({ user, onReturn }: ClientDashboardProps) => {
       title: "Controle Dinâmico de Ativos",
       desc: "Gestão inteligente de estoque de manutenção com inteligência preditiva.",
       icon: <Package className="w-8 h-8 text-primary" />,
-      actionText: "Acessar Sistema",
-      link: "https://manutencao-proativa-d77eee7d.base44.app",
-      status: "Disponível"
+      actionText: "Em Breve",
+      link: null,
+      status: "Em Breve"
     }
   ];
 

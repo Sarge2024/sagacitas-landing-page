@@ -3,6 +3,7 @@ import { LessonEditorService, LessonRecord } from '../services/LessonEditorServi
 import { MergedNodeProgress } from '../types';
 import { SlideRenderer } from './renderers/SlideRenderer';
 import { formatLessonWithHF } from '../../services/hfService';
+import { ImageImportModal, extractImageSlots, isRealUrl } from './ImageImportModal';
 
 interface AdminSlideEditorProps {
   lessonId: string;
@@ -15,6 +16,7 @@ export const AdminSlideEditor: React.FC<AdminSlideEditorProps> = ({ lessonId }) 
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isFormatting, setIsFormatting] = useState(false);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [statusMsg, setStatusMsg] = useState<{ text: string; isError: boolean } | null>(null);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -108,6 +110,8 @@ export const AdminSlideEditor: React.FC<AdminSlideEditorProps> = ({ lessonId }) 
     }
   };
 
+  const pendingImageCount = extractImageSlots(draft).filter(slot => !isRealUrl(slot.url)).length;
+
   const previewNode: MergedNodeProgress = {
     id: lesson?.uc_id || lessonId,
     title: lesson?.title || 'Pré-visualização',
@@ -189,6 +193,13 @@ export const AdminSlideEditor: React.FC<AdminSlideEditorProps> = ({ lessonId }) 
                 <span className="material-symbols-outlined text-sm">image</span>
                 {isUploading ? 'Enviando…' : 'Inserir imagem'}
               </button>
+              <button
+                onClick={() => setIsImageModalOpen(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 border border-slate-200 rounded-md text-xs font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+              >
+                <span className="material-symbols-outlined text-sm">photo_library</span>
+                Importar Imagens{pendingImageCount > 0 ? ` (${pendingImageCount})` : ''}
+              </button>
             </div>
             <input
               ref={fileInputRef}
@@ -218,6 +229,16 @@ export const AdminSlideEditor: React.FC<AdminSlideEditorProps> = ({ lessonId }) 
           </div>
         </div>
       </div>
+
+      {isImageModalOpen && (
+        <ImageImportModal
+          markdown={draft}
+          onReplace={(oldFullMatch, newFullMatch) =>
+            setDraft(prev => prev.replace(oldFullMatch, newFullMatch))
+          }
+          onClose={() => setIsImageModalOpen(false)}
+        />
+      )}
     </div>
   );
 };
