@@ -1,4 +1,4 @@
-import { CourseManifest, CourseSummary } from '../types';
+import { CourseManifest, CourseSummary, LearningObject } from '../types';
 import { getSupabaseClient, TENANT_ID, isSupabaseConfigured } from './supabaseClient';
 
 // Nomes amigáveis para gc_id conhecidos, publicados via lessons pelo Works Manager.
@@ -80,17 +80,81 @@ export class CourseManifestService {
           .single();
 
         if (error) {
-          console.warn(`[CourseManifestService] Consulta Supabase retornou aviso (${error.message}). Carregando catálogo padrão...`);
+          console.warn(`[CourseManifestService] 'course_manifests' indisponível (${error.message}). Tentando montar manifesto real a partir de 'lessons'...`);
         } else if (data && data.manifest) {
           return data.manifest as CourseManifest;
         }
       } catch (err) {
-        console.warn('[CourseManifestService] Falha na rede ao consultar Supabase, usando catálogo local de contingência:', err);
+        console.warn('[CourseManifestService] Falha na rede ao consultar course_manifests, tentando lessons:', err);
       }
+
+      // `course_manifests` não existe no banco real (ver WORKS_MANAGER_HANDOFF.md) — o
+      // acervo publicado pelo Works Manager mora em `lessons`. Monta o manifesto ao vivo
+      // a partir dele antes de recorrer ao catálogo mock.
+      const liveManifest = await this.buildManifestFromLessons(gcId, activeTenantId);
+      if (liveManifest) return liveManifest;
     }
 
     // Default / Mock Manifest fallback for demonstration & offline resilience
     return this.getMockManifest(gcId, activeTenantId);
+  }
+
+  /**
+   * Monta um CourseManifest ao vivo a partir de `lessons` (filtrando por
+   * gc_id), para cursos publicados pelo Works Manager que não têm entrada em
+   * `course_manifests`. Retorna null se não houver aulas ou se a consulta falhar,
+   * deixando `fetchManifest` cair no mock como último recurso.
+   */
+  private static async buildManifestFromLessons(gcId: string, tenantId: string): Promise<CourseManifest | null> {
+    try {
+      const supabase = getSupabaseClient();
+      const { data, error } = await supabase
+        .from('lessons')
+        .select('uc_id, title, module_id, order, markdown_content, type')
+        .eq('gc_id', gcId)
+        .not('uc_id', 'is', null)
+        .order('module_id', { ascending: true })
+        .order('order', { ascending: true });
+
+      if (error || !data || data.length === 0) {
+        if (error) {
+          console.warn(`[CourseManifestService] Falha ao montar manifesto real de 'lessons' para ${gcId}:`, error.message);
+        }
+        return null;
+      }
+
+      const rows = data as Array<{
+        uc_id: string;
+        title: string;
+        module_id: string | null;
+        order: number | null;
+        markdown_content: string | null;
+        type: string | null;
+      }>;
+
+      const nodes: LearningObject[] = rows.map((row, index) => ({
+        id: row.uc_id,
+        title: row.title,
+        description: row.module_id ? `Módulo: ${row.module_id}` : '',
+        type: (row.type as LearningObject['type']) ?? 'slide',
+        duration: '',
+        order: row.order ?? index + 1,
+        prerequisites: [],
+        interactive_type: row.type === 'slide' ? 'slide' : undefined,
+        markdownContent: row.markdown_content ?? undefined,
+      }));
+
+      return {
+        gc_id: gcId,
+        title: humanizeGcId(gcId),
+        description: `${nodes.length} aula${nodes.length === 1 ? '' : 's'} publicadas pelo Works Manager.`,
+        tenant_id: tenantId,
+        execution_graph: { nodes, edges: [] },
+      };
+    } catch (err) {
+      console.warn(`[CourseManifestService] Erro de rede ao montar manifesto real de 'lessons' para ${gcId}:`, err);
+      return null;
+    }
   }
 
   /**

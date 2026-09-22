@@ -2,8 +2,9 @@
  * Corrigido (2026-09-22): antes, este arquivo chamava a API do Hugging Face
  * DIRETO NO NAVEGADOR, lendo `import.meta.env.VITE_HUGGINGFACE_API_KEY` —
  * isso expõe a chave no bundle JS pra qualquer visitante do site (mesmo bug
- * já corrigido em api/chat.ts / geminiService.ts pro Gemini). A chamada real
- * agora acontece em `api/format-lesson.ts` (Vercel Function, servidor, lê
+ * já corrigido em api/chat.ts / chatService.ts, que também usa Hugging Face
+ * desde 2026-09-22). A chamada real agora acontece em `api/format-lesson.ts`
+ * (Vercel Function, servidor, lê
  * `HUGGINGFACE_API_KEY` sem prefixo VITE_). Este serviço só faz
  * `fetch('/api/format-lesson', ...)` — a chave nunca chega ao navegador.
  *

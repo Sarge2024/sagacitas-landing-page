@@ -39,20 +39,21 @@ export const DashboardView: React.FC = () => {
   };
 
   // Cursos reais publicados pelo Works Manager (via tabela `lessons`).
-  // Trilha completa (CourseManifestService.fetchManifest) ainda não constrói
-  // o grafo real a partir dessas aulas — por isso o card aparece, mas a ação
-  // fica "Em Breve" até essa ponte existir.
+  // CourseManifestService.fetchManifest() agora monta a trilha ao vivo a
+  // partir de `lessons` (buildManifestFromLessons) quando `course_manifests`
+  // não tem entrada — verificado 2026-09-22 com a mesma anon key do
+  // navegador, as 28 aulas retornam corretamente. Card liberado.
   const realCourseCards: CourseCard[] = realCourses.map(course => ({
     id: course.gc_id,
     title: course.title,
     description: course.description,
     progress: 0,
-    status: 'EM_BREVE',
-    statusText: 'Em Breve',
+    status: 'DISPONIVEL',
+    statusText: 'Novo Treinamento',
     icon: 'construction',
-    actionText: 'Em Breve',
-    isPrimary: false,
-    locked: true,
+    actionText: 'Iniciar',
+    isPrimary: true,
+    locked: false,
   }));
 
   const mockCourses: CourseCard[] = [

@@ -3,11 +3,16 @@
  * chamava a API do Gemini DIRETO NO NAVEGADOR, lendo
  * `import.meta.env.VITE_GEMINI_API_KEY` — isso expõe a chave no bundle JS
  * pra qualquer visitante do site (extraível via DevTools), permitindo abuso
- * da cota/fatura da conta. A chamada real agora acontece em `api/chat.ts`
- * (Vercel Function, roda no servidor, lê `GEMINI_API_KEY` sem prefixo VITE_).
- * Este serviço só faz `fetch('/api/chat', ...)` — a chave nunca chega ao
- * navegador. Assinatura de `getChatResponse` inalterada, então
- * `src/components/Chatbot.tsx` não precisou mudar.
+ * da cota/fatura da conta. A chamada real passou pra `api/chat.ts` (Vercel
+ * Function, roda no servidor).
+ *
+ * Renomeado de `geminiService.ts` pra `chatService.ts` (2026-09-22): a chave
+ * do Gemini ficou presa em "API key not valid" e o usuário pediu um provedor
+ * de LLM gratuito no lugar — `api/chat.ts` agora usa Hugging Face (mesmo
+ * token/endpoint do Auto-Formatar em api/format-lesson.ts). Este arquivo só
+ * faz `fetch('/api/chat', ...)` — a chave nunca chega ao navegador de
+ * qualquer forma. Assinatura de `getChatResponse` inalterada, então
+ * `src/components/Chatbot.tsx` não precisou mudar (só o import).
  *
  * Nota de dev local: `/api/chat` só responde rodando via `vercel dev`
  * (proxeia Vite + Vercel Functions juntos). Com `npm run dev` (Vite puro),

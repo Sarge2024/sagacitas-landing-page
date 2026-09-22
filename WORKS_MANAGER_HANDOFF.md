@@ -12,21 +12,23 @@ O repositório `gestor-de-obras` roda `scripts/syncLessons.ts` e publica aulas d
 
 Todas as **28 aulas do Works Manager já estão publicadas** (`uc_id` no formato `wm-m{módulo}-a{ordem}`, ex. `wm-m1-a4`, `wm-m8-a6`).
 
-## 🔴 GAP CRÍTICO (2026-09-22): nenhuma aula real chega no aluno ainda
+## ✅ GAP CRÍTICO — RESOLVIDO (2026-09-22): compilador de manifesto construído
 
-Testado com `vercel dev` real: o carregamento de curso do aluno (`useCourseStore.loadCourse()` → `CourseEngineService.fetchManifest()` → `CourseManifestService.fetchManifest()`) tenta ler `courses.manifest` (coluna que **não existe**) e a tabela `course_manifests` (que **não existe**) — sempre cai no `getMockManifest()` hardcoded. `lessons.markdown_content` está correto e completo (28 linhas), mas **nada no caminho do aluno lê essa tabela**. Falta um compilador de manifesto: `lessons` (filtrado por `gc_id`) → `CourseManifest` (nodes/edges), salvo em algum lugar que `fetchManifest` consiga achar. Sem isso, o Admin Editor funciona (edita/salva `lessons` direto por `id`), mas o aluno nunca vê o resultado.
+`CourseManifestService.fetchManifest(gcId)` ganhou um novo método `buildManifestFromLessons(gcId, tenantId)`, chamado como fallback entre a tentativa de `course_manifests` (que não existe) e o `getMockManifest()`. Ele consulta `lessons` direto (`gc_id`, `uc_id IS NOT NULL`, ordenado por `module_id`/`order`) e monta um `CourseManifest` real (`execution_graph.nodes` com `markdownContent` populado, `prerequisites: []` para todos — acervo tipo biblioteca, sem trava sequencial). `CourseEngineService.fetchManifest()` já delegava corretamente pra cá (linha 56), então nenhuma mudança foi necessária lá.
 
-## 🔧 Hugging Face — endpoint corrigido (2026-09-22), token ainda pendente
+**Verificado com dados reais**: `npm run lint` e `npm run build` limpos; e a query exata do novo método rodada com a mesma anon key do browser (`VITE_SUPABASE_ANON_KEY`) contra o Supabase real retornou as **28 aulas** de `gc_id='works-manager-basic'` com `markdown_content` presente em todas. `fetchAvailableCourseSummaries()` (usado no dashboard) já lia `lessons` corretamente antes disso — só o carregamento do conteúdo de um curso individual estava quebrado.
 
-`api/format-lesson.ts` usava `https://api-inference.huggingface.co/...` — **esse domínio não resolve DNS em lugar nenhum** (endpoint legado descontinuado pela HF). Corrigido pro router atual: `https://router.huggingface.co/v1/chat/completions` (modelo no corpo, não na URL). Testado via HTTP real: agora alcança a API, mas o token retorna `403 — "não tem permissão pra Inference Providers"`. **Ação necessária**: gerar/editar o token em huggingface.co/settings/tokens habilitando essa permissão.
+## ✅ Hugging Face — RESOLVIDO (2026-09-22)
 
-## ⚠️ Gemini — chave inválida (achado ao testar `/api/chat` de verdade)
+`api/format-lesson.ts` usava `https://api-inference.huggingface.co/...` — esse domínio não resolve DNS em lugar nenhum (endpoint legado descontinuado pela HF). Corrigido pro router atual: `https://router.huggingface.co/v1/chat/completions` (modelo no corpo, não na URL). O token também não tinha a permissão "Inference Providers" — usuário habilitou em huggingface.co/settings/tokens. **Testado via HTTP real contra a API de produção depois da correção: `200 OK`, resposta real do modelo `Qwen/Qwen2.5-72B-Instruct`.** Auto-Formatar (IA) no `AdminSlideEditor.tsx` está funcional ponta a ponta.
+
+## ⚠️ Gemini — chave inválida (ainda pendente, ação do usuário)
 
 `400 "API key not valid"` direto do Google. Provavelmente a chave tem restrição de HTTP referrer (criada pra uso no navegador) e agora, chamada do servidor (sem essa origem), é rejeitada. **Ação necessária**: gerar uma chave sem restrição de referrer no Google AI Studio / Cloud Console, específica pra uso server-side.
 
-## ⚠️ Projeto Vercel linkado errado
+## ✅ Projeto Vercel — RESOLVIDO (2026-09-22)
 
-`.vercel/project.json` deste repo aponta pro projeto `rdo-wm` (outro produto), não `sagacitas-landing-page-qyqce175h`. Não afeta `vercel dev` local (usa `.env`), mas um `vercel deploy` daqui iria pro projeto errado. Rodar `vercel link` de novo apontando pro projeto certo antes de deployar.
+`.vercel/project.json` apontava pro projeto errado (`rdo-wm`). Corrigido: `vercel link --scope sagacitas --project sagacitas-landing-page` → agora aponta pro projeto real (`prj_hOyEi7TYI3C3hwtHSUHrcoAZaFgA`, time `sagacitas`). **Achado durante a correção**: esse projeto Vercel está **zerado** — nenhuma variável de ambiente configurada lá (`vercel env ls` retornou vazio). Um `vercel deploy` a partir daqui funcionaria localmente mas falharia em produção (todas as Vercel Functions cairiam nos `503`/fallback por falta de `SUPABASE_*`, `HUGGINGFACE_API_KEY`, `GEMINI_API_KEY`, `BLOB_READ_WRITE_TOKEN`, etc.) até essas variáveis serem enviadas via `vercel env add` (ou pelo dashboard). Pendente: subir essas variáveis antes do primeiro deploy real (aguardando a chave do Gemini ser corrigida primeiro, pra subir tudo de uma vez já funcional).
 
 ## ⚠️ Responsabilidade que passou pra cá: formatação em slides via Hugging Face
 
@@ -79,7 +81,7 @@ O usuário decidiu que este repositório (`sagacitas-landing-page`) terá ferram
 - `public.lessons` tem um **gatilho de imutabilidade** — `DELETE` é bloqueado por design ("aulas são conhecimento universal e não podem ser apagadas"). Qualquer correção é via `UPDATE`.
 - Existe **1 linha duplicada inofensiva** pra "Matriz de Acessos" (sem `uc_id`, órfã de um bug já corrigido do lado do Works Manager) — pode ser ignorada, nenhuma busca por `uc_id` a encontra.
 - Existe outro repositório no mesmo projeto Supabase, `Sagacitas-E-Learning` (Mosaico de Conhecimento: `knowledge_units`/`learning_objects` faceteados PMEST) — é um produto **diferente e futuro**, sem relação com as aulas do Works Manager. Não confundir os dois ao mexer no banco.
-- Não verificado nesta sessão: se `LessonPlayerView.tsx` (a tela que o aluno vê) já busca de `lessons.markdown_content` via `SlideRenderer.tsx`, ou se essa ponte ainda precisa ser conectada — hoje ele lê `course.presentation.slides` (não populado) com fallback pra conteúdo mockado.
+- Verificado (2026-09-22): a tela do aluno é `OAPlayerView.tsx` (substituiu o antigo `LessonPlayerView.tsx`, já removido) e já roteia nós `type === 'slide'` pro `SlideRenderer.tsx`, que lê `markdownContent` direto — a ponte estava correta, só faltava o `CourseManifest` chegar populado até ela (ver seção "GAP CRÍTICO" acima, agora resolvido).
 
 ## Referências no repo `gestor-de-obras`
 

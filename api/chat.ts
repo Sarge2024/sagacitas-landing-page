@@ -1,15 +1,19 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { GoogleGenAI } from "@google/genai";
 
 /**
- * Vercel Function (server-side) para o chat do site. Antes, `GoogleGenAI` era
- * instanciado direto no navegador (src/services/geminiService.ts) lendo
- * `import.meta.env.VITE_GEMINI_API_KEY` — isso expõe a chave no bundle JS
- * pra qualquer visitante (extraível via DevTools). Corrigido: a chamada à
- * API do Gemini agora só acontece aqui, no servidor, lendo `GEMINI_API_KEY`
- * (sem prefixo VITE_, nunca enviada ao navegador). O frontend chama
- * `/api/chat` via fetch — ver src/services/geminiService.ts.
+ * Vercel Function (server-side) para o chat do site.
+ *
+ * Histórico: rodava com Gemini (`@google/genai`), primeiro exposto no
+ * navegador via `VITE_GEMINI_API_KEY` (corrigido em 2026-09-22 movendo pra
+ * cá), depois substituído pela Hugging Face nesta versão (2026-09-22) porque
+ * a chave do Gemini ficou presa em "API key not valid" (restrição de
+ * referrer) e o usuário pediu um provedor de LLM gratuito no lugar — reusa o
+ * mesmo endpoint/token já validado em api/format-lesson.ts
+ * (router.huggingface.co, HUGGINGFACE_API_KEY).
  */
+
+const DEFAULT_MODEL = "Qwen/Qwen2.5-72B-Instruct";
+const HF_CHAT_URL = "https://router.huggingface.co/v1/chat/completions";
 
 const SYSTEM_INSTRUCTION = `
 Você é o assistente virtual da Sagacitas Consulting, uma consultoria especializada em otimização de processos industriais, gestão de custos e inteligência de negócios (BI).
@@ -40,9 +44,15 @@ const ERROR_MESSAGE =
   "Desculpe, estou passando por instabilidades técnicas no momento. Por favor, tente novamente mais tarde ou entre em contato via e-mail.";
 const EMPTY_RESPONSE_MESSAGE = "Desculpe, tive um problema ao processar sua mensagem. Poderia repetir?";
 
+// Formato herdado do front-end (era o formato de `contents` do SDK do Gemini;
+// mantido pra não precisar mudar o contrato de src/services/chatService.ts).
 interface ChatHistoryItem {
   role: "user" | "model";
   parts: { text: string }[];
+}
+
+interface HfChatCompletionResponse {
+  choices?: Array<{ message?: { content?: string } }>;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -51,7 +61,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.HUGGINGFACE_API_KEY;
   if (!apiKey || apiKey.trim() === "") {
     res.status(200).json({ text: UNAVAILABLE_MESSAGE });
     return;
@@ -64,20 +74,44 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
   const safeHistory: ChatHistoryItem[] = Array.isArray(history) ? (history as ChatHistoryItem[]) : [];
 
+  const messages = [
+    { role: "system" as const, content: SYSTEM_INSTRUCTION },
+    ...safeHistory.map(item => ({
+      role: item.role === "model" ? ("assistant" as const) : ("user" as const),
+      content: item.parts.map(p => p.text).join("\n"),
+    })),
+    { role: "user" as const, content: message },
+  ];
+
   try {
-    const ai = new GoogleGenAI({ apiKey });
-    const response = await ai.models.generateContent({
-      model: "gemini-1.5-flash",
-      contents: [...safeHistory, { role: "user", parts: [{ text: message }] }],
-      config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
-        temperature: 0.7,
+    const hfResponse = await fetch(HF_CHAT_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify({
+        model: DEFAULT_MODEL,
+        messages,
+        temperature: 0.7,
+        max_tokens: 1024,
+      }),
+      signal: AbortSignal.timeout(60_000),
     });
 
-    res.status(200).json({ text: response.text || EMPTY_RESPONSE_MESSAGE });
+    if (!hfResponse.ok) {
+      const bodyText = await hfResponse.text().catch(() => "");
+      console.error(`Hugging Face API Error (${hfResponse.status}):`, bodyText.slice(0, 500));
+      res.status(200).json({ text: ERROR_MESSAGE });
+      return;
+    }
+
+    const data = (await hfResponse.json()) as HfChatCompletionResponse;
+    const text = data.choices?.[0]?.message?.content;
+
+    res.status(200).json({ text: text || EMPTY_RESPONSE_MESSAGE });
   } catch (error) {
-    console.error("Gemini API Error:", error);
+    console.error("Hugging Face API Error:", error);
     res.status(200).json({ text: ERROR_MESSAGE });
   }
 }

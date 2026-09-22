@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { MessageSquare, X, Send, Loader2, User, Bot } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { getChatResponse } from "../services/geminiService";
+import { getChatResponse } from "../services/chatService";
 
 interface Message {
   role: "user" | "model";
