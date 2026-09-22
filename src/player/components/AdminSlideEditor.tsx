@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { LessonEditorService, LessonRecord } from '../services/LessonEditorService';
 import { MergedNodeProgress } from '../types';
 import { SlideRenderer } from './renderers/SlideRenderer';
+import { formatLessonWithHF } from '../../services/hfService';
 
 interface AdminSlideEditorProps {
   lessonId: string;
@@ -13,6 +14,7 @@ export const AdminSlideEditor: React.FC<AdminSlideEditorProps> = ({ lessonId }) 
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isFormatting, setIsFormatting] = useState(false);
   const [statusMsg, setStatusMsg] = useState<{ text: string; isError: boolean } | null>(null);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -88,6 +90,24 @@ export const AdminSlideEditor: React.FC<AdminSlideEditorProps> = ({ lessonId }) 
     }
   };
 
+  const handleFormat = async () => {
+    if (!draft.trim()) {
+      setStatusMsg({ text: 'Adicione algum conteúdo antes de formatar.', isError: true });
+      return;
+    }
+    setIsFormatting(true);
+    setStatusMsg({ text: 'A IA está formatando o conteúdo. Isso pode levar alguns segundos...', isError: false });
+    try {
+      const formatted = await formatLessonWithHF(draft);
+      setDraft(formatted);
+      setStatusMsg({ text: 'Conteúdo formatado com sucesso! Revise e clique em Salvar.', isError: false });
+    } catch (err) {
+      setStatusMsg({ text: err instanceof Error ? err.message : String(err), isError: true });
+    } finally {
+      setIsFormatting(false);
+    }
+  };
+
   const previewNode: MergedNodeProgress = {
     id: lesson?.uc_id || lessonId,
     title: lesson?.title || 'Pré-visualização',
@@ -145,14 +165,24 @@ export const AdminSlideEditor: React.FC<AdminSlideEditorProps> = ({ lessonId }) 
         <div className="flex flex-col border-r border-slate-200 overflow-hidden">
           <div className="px-4 py-2 border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Markdown</span>
-            <button
-              onClick={handleImageButtonClick}
-              disabled={isUploading}
-              className="flex items-center gap-1.5 px-3 py-1.5 border border-slate-200 rounded-md text-xs font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors"
-            >
-              <span className="material-symbols-outlined text-sm">image</span>
-              {isUploading ? 'Enviando…' : 'Inserir imagem'}
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleFormat}
+                disabled={isFormatting || isUploading}
+                className="flex items-center gap-1.5 px-3 py-1.5 border border-purple-200 bg-purple-50 rounded-md text-xs font-medium text-purple-700 hover:bg-purple-100 disabled:opacity-50 transition-colors"
+              >
+                <span className="material-symbols-outlined text-sm">auto_awesome</span>
+                {isFormatting ? 'Formatando…' : 'Auto-Formatar (IA)'}
+              </button>
+              <button
+                onClick={handleImageButtonClick}
+                disabled={isUploading || isFormatting}
+                className="flex items-center gap-1.5 px-3 py-1.5 border border-slate-200 rounded-md text-xs font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors"
+              >
+                <span className="material-symbols-outlined text-sm">image</span>
+                {isUploading ? 'Enviando…' : 'Inserir imagem'}
+              </button>
+            </div>
             <input
               ref={fileInputRef}
               type="file"
