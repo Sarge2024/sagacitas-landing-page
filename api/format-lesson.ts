@@ -53,7 +53,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const selectedModel = typeof model === "string" && model.trim() ? model : DEFAULT_MODEL;
-  const url = `https://api-inference.huggingface.co/models/${selectedModel}/v1/chat/completions`;
+  // CORRIGIDO (2026-09-22): api-inference.huggingface.co não resolve mais DNS
+  // (endpoint legado descontinuado pela Hugging Face — confirmado por teste
+  // real, não suposição). O endpoint atual é o router unificado de Inference
+  // Providers, com o modelo indicado no corpo da requisição, não na URL.
+  const url = "https://router.huggingface.co/v1/chat/completions";
 
   let hfResponse: Response;
   try {
@@ -64,6 +68,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        model: selectedModel,
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: markdown },

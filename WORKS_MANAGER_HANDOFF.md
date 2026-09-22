@@ -12,6 +12,22 @@ O repositório `gestor-de-obras` roda `scripts/syncLessons.ts` e publica aulas d
 
 Todas as **28 aulas do Works Manager já estão publicadas** (`uc_id` no formato `wm-m{módulo}-a{ordem}`, ex. `wm-m1-a4`, `wm-m8-a6`).
 
+## 🔴 GAP CRÍTICO (2026-09-22): nenhuma aula real chega no aluno ainda
+
+Testado com `vercel dev` real: o carregamento de curso do aluno (`useCourseStore.loadCourse()` → `CourseEngineService.fetchManifest()` → `CourseManifestService.fetchManifest()`) tenta ler `courses.manifest` (coluna que **não existe**) e a tabela `course_manifests` (que **não existe**) — sempre cai no `getMockManifest()` hardcoded. `lessons.markdown_content` está correto e completo (28 linhas), mas **nada no caminho do aluno lê essa tabela**. Falta um compilador de manifesto: `lessons` (filtrado por `gc_id`) → `CourseManifest` (nodes/edges), salvo em algum lugar que `fetchManifest` consiga achar. Sem isso, o Admin Editor funciona (edita/salva `lessons` direto por `id`), mas o aluno nunca vê o resultado.
+
+## 🔧 Hugging Face — endpoint corrigido (2026-09-22), token ainda pendente
+
+`api/format-lesson.ts` usava `https://api-inference.huggingface.co/...` — **esse domínio não resolve DNS em lugar nenhum** (endpoint legado descontinuado pela HF). Corrigido pro router atual: `https://router.huggingface.co/v1/chat/completions` (modelo no corpo, não na URL). Testado via HTTP real: agora alcança a API, mas o token retorna `403 — "não tem permissão pra Inference Providers"`. **Ação necessária**: gerar/editar o token em huggingface.co/settings/tokens habilitando essa permissão.
+
+## ⚠️ Gemini — chave inválida (achado ao testar `/api/chat` de verdade)
+
+`400 "API key not valid"` direto do Google. Provavelmente a chave tem restrição de HTTP referrer (criada pra uso no navegador) e agora, chamada do servidor (sem essa origem), é rejeitada. **Ação necessária**: gerar uma chave sem restrição de referrer no Google AI Studio / Cloud Console, específica pra uso server-side.
+
+## ⚠️ Projeto Vercel linkado errado
+
+`.vercel/project.json` deste repo aponta pro projeto `rdo-wm` (outro produto), não `sagacitas-landing-page-qyqce175h`. Não afeta `vercel dev` local (usa `.env`), mas um `vercel deploy` daqui iria pro projeto errado. Rodar `vercel link` de novo apontando pro projeto certo antes de deployar.
+
 ## ⚠️ Responsabilidade que passou pra cá: formatação em slides via Hugging Face
 
 **Decisão (2026-09-22):** o Works Manager **não faz mais** pré-processamento via Hugging Face. O script `hfPreprocess.ts` que existia lá foi removido. A partir de agora:
