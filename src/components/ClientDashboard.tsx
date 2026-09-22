@@ -243,7 +243,7 @@ export const ClientDashboard = ({ user, onReturn }: ClientDashboardProps) => {
       {/* Main View Area */}
       {activeTab === "trainings" ? (
         <div className="flex-grow overflow-hidden relative w-full h-screen">
-          <PlayerApp />
+          <PlayerApp user={user} />
         </div>
       ) : (
         <main className="flex-grow p-6 md:p-10 space-y-8 overflow-y-auto max-w-7xl mx-auto w-full">

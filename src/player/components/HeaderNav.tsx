@@ -104,13 +104,20 @@ export const HeaderNav: React.FC = () => {
           </button>
 
           {/* User Profile Avatar */}
-          <div className="w-8 h-8 rounded-full overflow-hidden border border-[#c0c7d6] ml-1 bg-[#d4e3ff] shrink-0">
-            <img
-              src={session?.user.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=80'}
-              alt={session?.user.name || 'User profile'}
-              className="w-full h-full object-cover"
-            />
-          </div>
+          {session?.user.avatar_url ? (
+            <div className="w-8 h-8 rounded-full overflow-hidden border border-[#c0c7d6] ml-1 bg-[#d4e3ff] shrink-0">
+              <img
+                src={session.user.avatar_url}
+                alt={session?.user.name || 'User profile'}
+                className="w-full h-full object-cover"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+          ) : (
+            <div className="w-8 h-8 rounded-full border border-[#c0c7d6] ml-1 bg-[#005daa] text-white shrink-0 flex items-center justify-center font-bold text-sm">
+              {(session?.user.name || session?.user.email || 'U').charAt(0).toUpperCase()}
+            </div>
+          )}
         </div>
       </div>
     </header>

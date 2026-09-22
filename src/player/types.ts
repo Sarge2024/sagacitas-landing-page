@@ -4,7 +4,7 @@
 
 export type OAState = 'LOCKED' | 'AVAILABLE' | 'IN_PROGRESS' | 'COMPLETED' | 'REMEDIATION';
 
-export type OAType = 'video' | 'lab' | 'quiz' | 'project' | 'simulator' | 'simulator_dre';
+export type OAType = 'video' | 'lab' | 'quiz' | 'project' | 'simulator' | 'simulator_dre' | 'slide';
 
 export interface LearningObject {
   id: string; // uc_id (Unidade Curricular / OA)
@@ -15,7 +15,8 @@ export interface LearningObject {
   order: number;
   prerequisites: string[]; // List of uc_ids required before this OA
   code_snippet?: string;
-  interactive_type?: 'simulator' | 'quiz' | 'video' | 'lab' | 'project';
+  interactive_type?: 'simulator' | 'quiz' | 'video' | 'lab' | 'project' | 'slide';
+  markdownContent?: string; // Raw markdown for 'slide' OAs, slides separated by '---' (from lessons.markdown_content)
   quiz_questions?: Array<{
     id: string;
     question: string;

@@ -21,6 +21,7 @@ export interface HandshakeOptions {
     pass: string;
   };
   useGoogleProvider?: boolean;
+  firebaseUser?: any;
 }
 
 export class AuthHandshakeService {
@@ -60,7 +61,25 @@ export class AuthHandshakeService {
    */
   public static async authenticateFirebaseIdentity(
     options: HandshakeOptions
-  ): Promise<{ firebaseUid: string; firebaseToken: string; email: string; displayName: string; providerId: 'email' | 'google' | 'custom_jwt' }> {
+  ): Promise<{ firebaseUid: string; firebaseToken: string; email: string; displayName: string; providerId: 'email' | 'google' | 'custom_jwt'; photoURL?: string }> {
+    // 0. Se o usuário já foi repassado via prop pelo Dashboard, usamos ele direto
+    if (options.firebaseUser) {
+      try {
+        const user = options.firebaseUser;
+        const token = await user.getIdToken();
+        return {
+          firebaseUid: user.uid,
+          firebaseToken: token,
+          email: user.email || 'aluno.firebase@empresa.com.br',
+          displayName: user.displayName || user.email?.split('@')[0] || 'Aluno Firebase',
+          providerId: 'custom_jwt',
+          photoURL: user.photoURL || undefined,
+        };
+      } catch (err) {
+        console.warn('[AuthHandshakeService] Falha ao recuperar token do firebaseUser injetado:', err);
+      }
+    }
+
     // 1. Tentar obter o usuário autenticado atualmente no Firebase APENAS SE não houver credenciais explícitas sendo enviadas
     const authInstance = getFirebaseAuth();
     const hasExplicitRequest = Boolean(options.emailCredentials || options.useGoogleProvider || options.explicitToken);
@@ -74,6 +93,7 @@ export class AuthHandshakeService {
           email: user.email || 'aluno.firebase@empresa.com.br',
           displayName: user.displayName || user.email?.split('@')[0] || 'Aluno Firebase',
           providerId: 'custom_jwt',
+          photoURL: user.photoURL || undefined,
         };
       } catch (err) {
         console.warn('[AuthHandshakeService] Falha ao recuperar token do usuário logado:', err);
@@ -121,6 +141,7 @@ export class AuthHandshakeService {
             email: userCred.user.email || 'aluno.firebase@empresa.com.br',
             displayName: userCred.user.displayName || userCred.user.email?.split('@')[0] || 'Aluno Firebase',
             providerId,
+            photoURL: userCred.user.photoURL || undefined,
           };
         }
       } catch (fbError: any) {
@@ -255,7 +276,7 @@ export class AuthHandshakeService {
         id: identity.firebaseUid,
         email: identity.email,
         name: identity.displayName,
-        avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&q=80',
+        avatar_url: identity.photoURL,
         tenant_id: activeTenantId,
       },
       authDetails: dualAuthDetails,

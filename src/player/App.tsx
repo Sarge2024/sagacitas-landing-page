@@ -10,7 +10,7 @@ import { AuthHandshakeService } from './services/AuthHandshakeService';
 import { ClientWalletView } from './components/ClientWalletView';
 import { OAPlayerView } from './components/OAPlayerView';
 
-export default function App() {
+export default function App({ user }: { user?: any }) {
   const { currentView, runHandshake, session } = usePlayerStore();
 
   useEffect(() => {
@@ -19,7 +19,11 @@ export default function App() {
 
     // Perform initial handshake if not yet authenticated
     if (!session) {
-      runHandshake();
+      if (user) {
+        runHandshake(undefined, user);
+      } else {
+        runHandshake();
+      }
     }
 
     // Register cross-domain window.postMessage token listener

@@ -5,6 +5,7 @@ import { MergedNodeProgress, OAType } from '../types';
 import { VideoRenderer } from './renderers/VideoRenderer';
 import { QuizRenderer } from './renderers/QuizRenderer';
 import { SimulatorRenderer } from './renderers/SimulatorRenderer';
+import { SlideRenderer } from './renderers/SlideRenderer';
 import { HeaderNav } from './HeaderNav';
 import { SidebarNav } from './SidebarNav';
 import { MobileNav } from './MobileNav';
@@ -33,6 +34,7 @@ type RendererProps = { node: MergedNodeProgress; onComplete: (score?: number) =>
 
 const RENDERER_MAP: Partial<Record<string, React.FC<RendererProps>>> = {
   video:         ({ node, onComplete }) => <VideoRenderer node={node} onComplete={onComplete} />,
+  slide:         ({ node, onComplete }) => <SlideRenderer node={node} onComplete={onComplete} />,
   quiz:          ({ node, onComplete }) => <QuizRenderer node={node} onComplete={(s) => onComplete(s)} />,
   simulator:     ({ node, onComplete }) => <SimulatorRenderer node={node} onComplete={(s) => onComplete(s)} />,
   simulator_dre: ({ node, onComplete }) => <SimulatorRenderer node={node} onComplete={(s) => onComplete(s)} />,
@@ -75,7 +77,7 @@ const UnsupportedRenderer: React.FC<{ type: string }> = ({ type }) => (
 // ─────────────────────────────────────────────────────────────────────────────
 const PHASE_TYPE_MAP: Record<Phase, OAType[]> = {
   proposito: ['video'],
-  conteudo:  ['lab', 'simulator', 'simulator_dre', 'project'],
+  conteudo:  ['lab', 'simulator', 'simulator_dre', 'project', 'slide'],
   validacao: ['quiz'],
 };
 
@@ -218,6 +220,7 @@ export const OAPlayerView: React.FC = () => {
                 style={{ fontVariationSettings: "'FILL' 1" }}
               >
                 {activeNode.type === 'video' ? 'play_lesson'
+                  : activeNode.type === 'slide' ? 'menu_book'
                   : activeNode.type === 'quiz' ? 'quiz'
                   : activeNode.type === 'project' ? 'assignment'
                   : 'terminal'}

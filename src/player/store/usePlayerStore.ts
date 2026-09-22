@@ -52,8 +52,8 @@ interface PlayerState {
   addLog: (service: SystemLog['service'], message: string, type?: SystemLog['type']) => void;
 
   // SDK Engine Core Methods
-  runHandshake: (customToken?: string) => Promise<void>;
-  runDualAuthHandshake: (options?: { email?: string; pass?: string; useGoogle?: boolean; customToken?: string }) => Promise<void>;
+  runHandshake: (customToken?: string, firebaseUser?: any) => Promise<void>;
+  runDualAuthHandshake: (options?: { email?: string; pass?: string; useGoogle?: boolean; customToken?: string; firebaseUser?: any }) => Promise<void>;
   loadCourse: (gcId: string) => Promise<void>;
   selectLearningObject: (ucId: string) => void;
   submitScore: (score: number) => Promise<ValidationResult | null>;
@@ -108,6 +108,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
         emailCredentials: options.email && options.pass ? { email: options.email, pass: options.pass } : undefined,
         useGoogleProvider: options.useGoogle,
         allowDemoFallback: true,
+        firebaseUser: options.firebaseUser,
       });
 
       set({ session, isLoading: false });
@@ -130,8 +131,8 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   /**
    * Runs the AuthHandshakeService flow
    */
-  runHandshake: async (customToken?: string) => {
-    return get().runDualAuthHandshake({ customToken });
+  runHandshake: async (customToken?: string, firebaseUser?: any) => {
+    return get().runDualAuthHandshake({ customToken, firebaseUser });
   },
 
   /**
