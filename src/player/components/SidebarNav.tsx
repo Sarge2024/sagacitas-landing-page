@@ -63,6 +63,11 @@ export const SidebarNav: React.FC = () => {
           <span>Gerenciar Acessos</span>
         </button>
 
+        <a href="/class-studio" className={inactiveItemClass}>
+          <span className="material-symbols-outlined text-xl">edit_note</span>
+          <span>Class Studio</span>
+        </a>
+
         <button
           onClick={() => setCurrentView('player')}
           className={currentView === 'player' ? activeItemClass : inactiveItemClass}

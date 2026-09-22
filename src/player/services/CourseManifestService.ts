@@ -206,6 +206,44 @@ function processDataset(rawInput, threshold = 70) {
       };
     }
 
+    if (gcId === 'gc_works_manager_01' || gcId === 'works-manager-basic') {
+      return {
+        gc_id: 'gc_works_manager_01',
+        title: 'Gestor de Obras — Treinamento Essencial',
+        description: 'Aprenda a utilizar o sistema Gestor de Obras: orçamentos, planejamento e gestão de ativos e pessoas.',
+        tenant_id: tenantId,
+        module_name: 'Módulo Único: Fundamentos',
+        cover_image: '/works-manager-cover.png',
+        execution_graph: {
+          nodes: [
+            {
+              id: 'uc_wm_01',
+              title: 'Visão Geral do Gestor de Obras',
+              description: 'Apresentação da interface, navegação e conceitos principais do sistema dual IdP.',
+              type: 'video',
+              duration: '15m',
+              order: 1,
+              prerequisites: [],
+              interactive_type: 'video',
+            },
+            {
+              id: 'uc_wm_02',
+              title: 'Painel de Custos e Orçamentos',
+              description: 'Como criar, revisar e aprovar relatórios e orçamentos industriais.',
+              type: 'slide',
+              duration: '25m',
+              order: 2,
+              prerequisites: ['uc_wm_01'],
+              interactive_type: 'slide',
+            }
+          ],
+          edges: [
+            { from: 'uc_wm_01', to: 'uc_wm_02' }
+          ],
+        },
+      };
+    }
+
     // Default return
     return {
       gc_id: gcId,

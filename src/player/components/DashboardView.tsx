@@ -57,6 +57,18 @@ export const DashboardView: React.FC = () => {
 
   const mockCourses: CourseCard[] = [
     {
+      id: 'gc_works_manager_01',
+      title: 'Treinamento Works Manager',
+      description: 'Aprenda a utilizar o sistema Gestor de Obras: orçamentos, planejamento e gestão de ativos.',
+      progress: 0,
+      status: 'NAO_INICIADO',
+      statusText: 'Novo Treinamento',
+      image: '/works-manager-cover.png',
+      actionText: 'Iniciar',
+      isPrimary: true,
+      locked: false,
+    },
+    {
       id: 'gc_logica_01',
       title: 'Fundamentos de Lógica',
       description: 'Aprenda os blocos de construção fundamentais da programação e do pensamento computacional estruturado.',

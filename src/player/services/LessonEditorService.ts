@@ -45,6 +45,33 @@ export class LessonEditorService {
   }
 
   /**
+   * Lista todas as aulas (para a tela de índice do Class Studio), ordenadas
+   * por curso/módulo/ordem. Sem paginação — o acervo hoje é pequeno (~28 linhas).
+   */
+  public static async listLessons(): Promise<LessonRecord[]> {
+    if (!isSupabaseConfigured()) return [];
+
+    try {
+      const supabase = getSupabaseClient();
+      const { data, error } = await supabase
+        .from('lessons')
+        .select('*')
+        .order('gc_id', { ascending: true })
+        .order('module_id', { ascending: true })
+        .order('order', { ascending: true });
+
+      if (error) {
+        console.warn('[LessonEditorService] Erro ao listar aulas:', error.message);
+        return [];
+      }
+      return (data ?? []) as LessonRecord[];
+    } catch (err) {
+      console.warn('[LessonEditorService] Erro de rede ao listar aulas:', err);
+      return [];
+    }
+  }
+
+  /**
    * Persiste o Markdown editado na coluna `markdown_content` da tabela `lessons`.
    */
   public static async saveLessonMarkdown(lessonId: string, markdownContent: string): Promise<void> {

@@ -137,8 +137,15 @@ export const AdminSlideEditor: React.FC<AdminSlideEditorProps> = ({ lessonId }) 
       {/* Header */}
       <header className="border-b border-slate-200 bg-white px-6 py-3 flex items-center justify-between shrink-0">
         <div>
+          <a
+            href="/class-studio"
+            className="flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700 mb-1 w-fit"
+          >
+            <span className="material-symbols-outlined text-sm">arrow_back</span>
+            Class Studio
+          </a>
           <h1 className="text-base font-semibold text-slate-800">
-            Editor de Aula {lesson?.title ? `— ${lesson.title}` : ''}
+            {lesson?.title || 'Editor de Aula'}
           </h1>
           <p className="text-xs text-slate-400 font-mono">lessonId: {lessonId}</p>
         </div>
