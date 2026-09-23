@@ -4,10 +4,13 @@ import { getSupabaseClient, TENANT_ID, isSupabaseConfigured } from './supabaseCl
 // Nomes amigáveis para gc_id conhecidos, publicados via lessons pelo Works Manager.
 // Sem tabela de metadados de curso real ainda — cai no slug "humanizado" para gc_id desconhecidos.
 // Desde 2026-09-23 o Works Manager publica em 4 cursos por plano comercial em vez de um
-// curso único — 'works-manager-basic' fica mantido aqui por segurança (nenhuma linha nova
-// nasce com esse gc_id, mas não custa manter o nome amigável caso alguma linha antiga reste).
+// curso único. BUG REAL corrigido (2026-09-23): este mapa tinha 'works-manager-basic' com
+// o nome "Treinamento Essencial" — como essa gc_id ainda guarda 1 aula órfã (Suprimentos,
+// wm-m5-a1, deliberadamente fora da reestruturação), ela aparecia como um 2º card de
+// "Essencial" no Dashboard, duplicando visualmente o curso real 'works-manager-essencial'.
+// Renomeado pra não conter "Essencial" — evita a leitura de curso duplicado/dividido.
 const FRIENDLY_COURSE_NAMES: Record<string, string> = {
-  'works-manager-basic': 'Gestor de Obras — Treinamento Essencial',
+  'works-manager-basic': 'Gestor de Obras — Conteúdo Legado (Suprimentos)',
   'works-manager-essencial': 'Gestor de Obras — Plano Essencial',
   'works-manager-professional': 'Gestor de Obras — Plano Professional',
   'works-manager-enterprise': 'Gestor de Obras — Plano Enterprise',
