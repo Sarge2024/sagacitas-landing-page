@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { LessonEditorService } from '../services/LessonEditorService';
+import { ImageAnnotatorModal } from './ImageAnnotatorModal';
 
 // Casa tanto `![texto simples](url)` quanto o padrão usado pelo Works Manager
 // nos placeholders de print, com colchete duplo: `![[PRINT: Título]](url)`.
@@ -43,9 +44,17 @@ const SlotRow: React.FC<SlotRowProps> = ({ slot, onReplace }) => {
   const [currentSlot, setCurrentSlot] = useState(slot);
   const [isUploading, setIsUploading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isAnnotating, setIsAnnotating] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const imported = isRealUrl(currentSlot.url);
+
+  const handleAnnotationSaved = (newUrl: string) => {
+    const newFullMatch = `![${currentSlot.altRaw}](${newUrl})`;
+    onReplace(currentSlot.fullMatch, newFullMatch);
+    setCurrentSlot({ ...currentSlot, url: newUrl, fullMatch: newFullMatch });
+    setIsAnnotating(false);
+  };
 
   const handleFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -93,6 +102,15 @@ const SlotRow: React.FC<SlotRowProps> = ({ slot, onReplace }) => {
             Importada
           </span>
         )}
+        {imported && (
+          <button
+            onClick={() => setIsAnnotating(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 border border-purple-200 bg-purple-50 rounded-md text-xs font-medium text-purple-700 hover:bg-purple-100 transition-colors"
+          >
+            <span className="material-symbols-outlined text-sm">draw</span>
+            Anotar
+          </button>
+        )}
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploading}
@@ -103,6 +121,14 @@ const SlotRow: React.FC<SlotRowProps> = ({ slot, onReplace }) => {
         </button>
         <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileSelected} />
       </div>
+
+      {isAnnotating && (
+        <ImageAnnotatorModal
+          imageUrl={currentSlot.url}
+          onSave={handleAnnotationSaved}
+          onClose={() => setIsAnnotating(false)}
+        />
+      )}
     </div>
   );
 };

@@ -3,8 +3,15 @@ import { getSupabaseClient, TENANT_ID, isSupabaseConfigured } from './supabaseCl
 
 // Nomes amigáveis para gc_id conhecidos, publicados via lessons pelo Works Manager.
 // Sem tabela de metadados de curso real ainda — cai no slug "humanizado" para gc_id desconhecidos.
+// Desde 2026-09-23 o Works Manager publica em 4 cursos por plano comercial em vez de um
+// curso único — 'works-manager-basic' fica mantido aqui por segurança (nenhuma linha nova
+// nasce com esse gc_id, mas não custa manter o nome amigável caso alguma linha antiga reste).
 const FRIENDLY_COURSE_NAMES: Record<string, string> = {
   'works-manager-basic': 'Gestor de Obras — Treinamento Essencial',
+  'works-manager-essencial': 'Gestor de Obras — Plano Essencial',
+  'works-manager-professional': 'Gestor de Obras — Plano Professional',
+  'works-manager-enterprise': 'Gestor de Obras — Plano Enterprise',
+  'works-manager-budgetpro': 'Gestor de Obras — Budget Pro (Orçamento por Produtividade)',
 };
 
 function humanizeGcId(gcId: string): string {

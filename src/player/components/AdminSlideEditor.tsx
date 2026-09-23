@@ -1,9 +1,27 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { LessonEditorService, LessonRecord } from '../services/LessonEditorService';
+import { LessonSyncService } from '../services/LessonSyncService';
+import { SlideSyncService, ParsedSlide, SlideStatus } from '../services/SlideSyncService';
 import { MergedNodeProgress } from '../types';
 import { SlideRenderer } from './renderers/SlideRenderer';
 import { formatLessonWithHF } from '../../services/hfService';
 import { ImageImportModal, extractImageSlots, isRealUrl } from './ImageImportModal';
+
+const SLIDE_STATUS_LABEL: Record<SlideStatus, string> = {
+  new: 'Novo',
+  moved: 'Movido',
+  changed: 'Alterado',
+  unchanged: 'Sincronizado',
+  'missing-id': 'Sem ID',
+};
+
+const SLIDE_STATUS_CLASS: Record<SlideStatus, string> = {
+  new: 'bg-blue-50 text-blue-700 border-blue-200',
+  moved: 'bg-amber-50 text-amber-700 border-amber-200',
+  changed: 'bg-red-50 text-red-700 border-red-200',
+  unchanged: 'bg-slate-50 text-slate-500 border-slate-200',
+  'missing-id': 'bg-purple-50 text-purple-700 border-purple-200',
+};
 
 interface AdminSlideEditorProps {
   lessonId: string;
@@ -18,9 +36,29 @@ export const AdminSlideEditor: React.FC<AdminSlideEditorProps> = ({ lessonId }) 
   const [isFormatting, setIsFormatting] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [statusMsg, setStatusMsg] = useState<{ text: string; isError: boolean } | null>(null);
+  const [slideStatuses, setSlideStatuses] = useState<Array<ParsedSlide & { status: SlideStatus }>>([]);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Status por slide (protocolo slide-id) — recalculado a cada mudança no
+  // draft, com um pequeno debounce pra não hashear a cada tecla digitada.
+  useEffect(() => {
+    if (!draft.trim()) {
+      setSlideStatuses([]);
+      return;
+    }
+    let cancelled = false;
+    const timeout = setTimeout(() => {
+      SlideSyncService.classifyAll(lessonId, draft).then(result => {
+        if (!cancelled) setSlideStatuses(result);
+      });
+    }, 400);
+    return () => {
+      cancelled = true;
+      clearTimeout(timeout);
+    };
+  }, [draft, lessonId]);
 
   useEffect(() => {
     let cancelled = false;
@@ -84,6 +122,8 @@ export const AdminSlideEditor: React.FC<AdminSlideEditorProps> = ({ lessonId }) 
     setStatusMsg(null);
     try {
       await LessonEditorService.saveLessonMarkdown(lessonId, draft);
+      await LessonSyncService.markReviewed(lessonId, draft);
+      await SlideSyncService.markAllReviewed(lessonId, draft);
       setStatusMsg({ text: 'Conteúdo salvo com sucesso.', isError: false });
     } catch (err) {
       setStatusMsg({ text: err instanceof Error ? err.message : String(err), isError: true });
@@ -110,7 +150,14 @@ export const AdminSlideEditor: React.FC<AdminSlideEditorProps> = ({ lessonId }) 
     }
   };
 
+  const handleAssignMissingIds = () => {
+    setDraft(prev => SlideSyncService.ensureSlideIds(prev));
+    setStatusMsg({ text: 'IDs atribuídos aos slides que não tinham. Revise e clique em Salvar.', isError: false });
+  };
+
   const pendingImageCount = extractImageSlots(draft).filter(slot => !isRealUrl(slot.url)).length;
+  const missingIdCount = slideStatuses.filter(s => s.status === 'missing-id').length;
+  const needsAttentionCount = slideStatuses.filter(s => s.status === 'new' || s.status === 'moved' || s.status === 'changed').length;
 
   const previewNode: MergedNodeProgress = {
     id: lesson?.uc_id || lessonId,
@@ -170,6 +217,24 @@ export const AdminSlideEditor: React.FC<AdminSlideEditorProps> = ({ lessonId }) 
         </div>
       </header>
 
+      {/* Status por slide (protocolo slide-id) */}
+      {slideStatuses.length > 0 && (
+        <div className="border-b border-slate-200 bg-white px-4 py-2 flex items-center gap-2 overflow-x-auto shrink-0">
+          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wide shrink-0">
+            Slides{needsAttentionCount > 0 ? ` — ${needsAttentionCount} precisam de atenção` : ''}:
+          </span>
+          {slideStatuses.map(slide => (
+            <span
+              key={slide.slideId ?? `idx-${slide.index}`}
+              title={slide.title}
+              className={`shrink-0 text-[11px] font-medium px-2 py-0.5 rounded-full border whitespace-nowrap ${SLIDE_STATUS_CLASS[slide.status]}`}
+            >
+              {slide.index + 1}. {slide.title.length > 24 ? slide.title.slice(0, 24) + '…' : slide.title} — {SLIDE_STATUS_LABEL[slide.status]}
+            </span>
+          ))}
+        </div>
+      )}
+
       {/* Editor + Preview (side by side) */}
       <div className="flex-1 grid grid-cols-1 md:grid-cols-2 overflow-hidden">
         {/* Markdown Editor */}
@@ -200,6 +265,16 @@ export const AdminSlideEditor: React.FC<AdminSlideEditorProps> = ({ lessonId }) 
                 <span className="material-symbols-outlined text-sm">photo_library</span>
                 Importar Imagens{pendingImageCount > 0 ? ` (${pendingImageCount})` : ''}
               </button>
+              {missingIdCount > 0 && (
+                <button
+                  onClick={handleAssignMissingIds}
+                  className="flex items-center gap-1.5 px-3 py-1.5 border border-purple-200 bg-purple-50 rounded-md text-xs font-medium text-purple-700 hover:bg-purple-100 transition-colors"
+                  title="Atribui um slide-id determinístico (sem IA) a todo slide que ainda não tenha"
+                >
+                  <span className="material-symbols-outlined text-sm">tag</span>
+                  Atribuir IDs faltantes ({missingIdCount})
+                </button>
+              )}
             </div>
             <input
               ref={fileInputRef}

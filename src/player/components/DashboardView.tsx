@@ -42,7 +42,10 @@ export const DashboardView: React.FC = () => {
   // CourseManifestService.fetchManifest() agora monta a trilha ao vivo a
   // partir de `lessons` (buildManifestFromLessons) quando `course_manifests`
   // não tem entrada — verificado 2026-09-22 com a mesma anon key do
-  // navegador, as 28 aulas retornam corretamente. Card liberado.
+  // navegador. Desde 2026-09-23 o Works Manager publica em múltiplos
+  // cursos (gc_id distintos por plano comercial), não mais um curso único —
+  // este .map() já é genérico por design, um card nasce automaticamente
+  // pra cada gc_id novo que aparecer em `lessons`, sem mudança de código aqui.
   const realCourseCards: CourseCard[] = realCourses.map(course => ({
     id: course.gc_id,
     title: course.title,
@@ -56,19 +59,12 @@ export const DashboardView: React.FC = () => {
     locked: false,
   }));
 
+  // Nota (2026-09-23): o mock 'gc_works_manager_01' ("Treinamento Works
+  // Manager") que existia aqui foi removido — desde a reestruturação em 4
+  // cursos por plano comercial, os cards reais do Works Manager já vêm de
+  // `realCourseCards` acima; mantê-lo criaria um card duplicado/obsoleto
+  // apontando pra um gc_id que não existe mais em `lessons`.
   const mockCourses: CourseCard[] = [
-    {
-      id: 'gc_works_manager_01',
-      title: 'Treinamento Works Manager',
-      description: 'Aprenda a utilizar o sistema Gestor de Obras: orçamentos, planejamento e gestão de ativos.',
-      progress: 0,
-      status: 'NAO_INICIADO',
-      statusText: 'Novo Treinamento',
-      image: '/works-manager-cover.png',
-      actionText: 'Iniciar',
-      isPrimary: true,
-      locked: false,
-    },
     {
       id: 'gc_logica_01',
       title: 'Fundamentos de Lógica',

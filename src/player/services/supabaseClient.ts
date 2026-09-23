@@ -6,7 +6,6 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 export const TENANT_ID = import.meta.env.VITE_TENANT_ID || '';
 
 let supabaseInstance: SupabaseClient | null = null;
-let currentAccessToken: string | null = null;
 
 /**
  * Validates environment requirements (Fail Fast check).
@@ -36,60 +35,27 @@ export function getSupabaseClient(): SupabaseClient {
       autoRefreshToken: true,
       detectSessionInUrl: false,
     },
-    global: {
-      headers: currentAccessToken
-        ? { Authorization: `Bearer ${currentAccessToken}` }
-        : {},
-    },
   });
 
   return supabaseInstance;
 }
 
 /**
- * Dynamically sets the external JWT token for RLS authentication handshake.
+ * Recebe o token de identidade do handshake (Firebase ID token, ou o mock de
+ * fallback de demo). Não é repassado ao Supabase como Authorization: nem o
+ * Firebase nem o mock assinam com o JWT secret deste projeto Supabase, e um
+ * Authorization inválido faz o PostgREST rejeitar com 401 ("JWT cryptographic
+ * operation failed") TODA consulta seguinte feita pelo cliente singleton —
+ * inclusive as de `lessons` no Dashboard. Confirmado em 2026-09-23: era a
+ * causa dos cards reais do Works Manager sumirem depois do login. As tabelas
+ * de treinamento (`lessons`, `lessons_sync_state`, `lessons_slide_sync_state`)
+ * usam RLS permissiva (`USING (true)`) e não dependem desse token — o cliente
+ * segue autenticado só pela anon key.
  * @param token JWT Session Token received from parent portal
  */
 export async function setSupabaseAuthToken(token: string): Promise<void> {
   if (!token) {
     throw new Error('[AuthHandshake] Impossível injetar token: Token JWT ausente.');
-  }
-
-  currentAccessToken = token;
-
-  // Evita tentar injetar sessão se o Supabase não estiver ativamente configurado no .env
-  if (!isSupabaseConfigured()) {
-    console.log('[AuthHandshake] Supabase não configurado. Token de sessão armazenado em memória.');
-    return;
-  }
-
-  // Re-cria a instância para forçar o novo header global (Authorization: Bearer token)
-  const url = supabaseUrl || 'https://placeholder-tenant.supabase.co';
-  const key = supabaseAnonKey || 'placeholder-anon-key';
-
-  supabaseInstance = createClient(url, key, {
-    auth: {
-      persistSession: false, // Não tentamos gerenciar a sessão localmente pelo Supabase
-      autoRefreshToken: false,
-      detectSessionInUrl: false,
-    },
-    global: {
-      headers: { Authorization: `Bearer ${currentAccessToken}` },
-    },
-  });
-
-  // Também tentamos registrar a sessão para compatibilidade com o módulo Storage (opcional)
-  try {
-    const { error } = await supabaseInstance.auth.setSession({
-      access_token: token,
-      refresh_token: 'dummy-refresh-token', // Evita o erro 'Auth session missing'
-    });
-
-    if (error) {
-      console.warn('[AuthHandshake] Aviso ao registrar sessão no Supabase:', error.message);
-    }
-  } catch (err) {
-    console.warn('[AuthHandshake] Fallback de token em headers customizados:', err);
   }
 }
 
