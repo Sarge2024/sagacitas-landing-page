@@ -1,0 +1,101 @@
+/* ============================================================
+   Works Manager · sistema de tema
+   Claro = prancha de papel (desenho técnico)
+   Escuro = prancha de campo (mesa noturna)
+   ============================================================ */
+
+:root{
+  color-scheme: light;
+
+  /* superfícies */
+  --bg:#E9E3D6;
+  --bg-2:#F1ECE2;
+  --glow-a:rgba(184,90,18,.13);
+  --glow-b:rgba(43,106,97,.09);
+  --surface:rgba(255,255,255,.60);
+  --surface-2:rgba(255,255,255,.88);
+  --rail-bg:rgba(233,227,214,.92);
+
+  /* tinta */
+  --text:#38322A;
+  --text-strong:#171310;
+  --text-soft:#514A3B;
+  --text-dim:#59513F;
+
+  /* traços */
+  --line:rgba(23,19,15,.16);
+  --line-2:rgba(23,19,15,.38);
+
+  /* acentos */
+  --amber:#9C470A;
+  --amber-2:#7A3504;
+  --on-amber:#FFF8EE;
+  --teal:#2B6A61;
+  --teal-2:#1E4F47;
+  --arc-1:#C25E14;
+  --arc-2:#DE8B3C;
+  --arc-3:#2B6A61;
+  --arc-4:#59988D;
+
+  /* sobre imagem (scrim escuro nos dois temas) */
+  --hero-txt:#FBF6EC;
+  --hero-sub:#E8E0D2;
+  --hero-scrim:
+    linear-gradient(90deg, rgba(20,17,14,.985) 0%, rgba(20,17,14,.955) 30%, rgba(20,17,14,.64) 55%, rgba(20,17,14,0) 84%),
+    linear-gradient(0deg, rgba(20,17,14,.96) 0%, rgba(20,17,14,.34) 34%, rgba(20,17,14,0) 52%);
+  --hero-fade:linear-gradient(0deg, rgba(20,17,14,.10), rgba(20,17,14,0) 46%);
+  --img-filter:saturate(.97) contrast(1.03) brightness(1);
+  --shadow-plate:0 18px 44px -28px rgba(23,19,15,.55);
+}
+
+[data-theme="dark"]{
+  color-scheme: dark;
+
+  --bg:#14110E;
+  --bg-2:#1B1712;
+  --glow-a:rgba(232,131,58,.13);
+  --glow-b:rgba(62,130,121,.10);
+  --surface:rgba(28,24,20,.55);
+  --surface-2:rgba(32,27,22,.86);
+  --rail-bg:rgba(20,17,14,.88);
+
+  --text:#D8D1C4;
+  --text-strong:#FBF6EC;
+  --text-soft:#B5AC9A;
+  --text-dim:#9C9383;
+
+  --line:rgba(239,232,220,.13);
+  --line-2:rgba(239,232,220,.34);
+
+  --amber:#E8833A;
+  --amber-2:#F6AE5B;
+  --on-amber:#14110E;
+  --teal:#3E8279;
+  --teal-2:#8CC6BC;
+  --arc-1:#E8833A;
+  --arc-2:#F2A44E;
+  --arc-3:#3E8279;
+  --arc-4:#5E9E93;
+
+  --hero-fade:linear-gradient(0deg, rgba(20,17,14,.10), rgba(20,17,14,0) 46%);
+  --img-filter:saturate(.96) contrast(1.02) brightness(.97);
+  --shadow-plate:0 22px 60px -34px rgba(0,0,0,.9);
+}
+
+/* ---------- alternador de tema ---------- */
+.theme{
+  display:flex;flex:0 0 auto;border:1px solid var(--line-2);overflow:hidden;
+  margin-left:auto;
+}
+.theme button{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+  padding:6px 10px;background:transparent;color:var(--text-dim);border:0;cursor:pointer;
+  transition:background .18s,color .18s;line-height:1.5;
+}
+.theme button + button{border-left:1px solid var(--line)}
+.theme button:hover{color:var(--text-strong)}
+.theme button.on{background:var(--amber);color:var(--on-amber);font-weight:500}
+.theme button:focus-visible{outline:2px solid var(--amber);outline-offset:-3px}
+@media(max-width:520px){
+  .theme button{padding:5px 7px;font-size:9px;letter-spacing:.08em}
+}
