@@ -1,5 +1,6 @@
 import { CourseManifest, CourseSummary, LearningObject } from '../types';
 import { getSupabaseClient, TENANT_ID, isSupabaseConfigured } from './supabaseClient';
+import { LessonStyleService } from './LessonStyleService';
 
 // Nomes amigáveis para gc_id conhecidos, publicados via lessons pelo Works Manager.
 // Sem tabela de metadados de curso real ainda — cai no slug "humanizado" para gc_id desconhecidos.
@@ -120,7 +121,7 @@ export class CourseManifestService {
       const supabase = getSupabaseClient();
       const { data, error } = await supabase
         .from('lessons')
-        .select('uc_id, title, module_id, order, markdown_content, type')
+        .select('id, uc_id, title, module_id, order, markdown_content, type')
         .eq('gc_id', gcId)
         .not('uc_id', 'is', null)
         .order('module_id', { ascending: true })
@@ -134,6 +135,7 @@ export class CourseManifestService {
       }
 
       const rows = data as Array<{
+        id: string;
         uc_id: string;
         title: string;
         module_id: string | null;
@@ -141,6 +143,10 @@ export class CourseManifestService {
         markdown_content: string | null;
         type: string | null;
       }>;
+
+      // CSS customizado por aula (src/player/db/lesson_slide_styles.sql) — busca em
+      // lote pra não fazer uma query por aula ao montar o manifesto inteiro.
+      const stylesByLessonId = await LessonStyleService.fetchStylesForLessons(rows.map(row => row.id));
 
       const nodes: LearningObject[] = rows.map((row, index) => ({
         id: row.uc_id,
@@ -152,6 +158,7 @@ export class CourseManifestService {
         prerequisites: [],
         interactive_type: row.type === 'slide' ? 'slide' : undefined,
         markdownContent: row.markdown_content ?? undefined,
+        customCss: stylesByLessonId[row.id] || undefined,
       }));
 
       return {

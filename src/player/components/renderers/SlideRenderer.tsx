@@ -20,6 +20,13 @@ function splitSlides(markdown: string): string[] {
     .filter(Boolean);
 }
 
+// Escopo do CSS por aula (lesson_slide_styles): a classe vira o seletor pai
+// via CSS nesting nativo, então o CSS escrito no Class Studio nunca vaza pra
+// fora do container do slide nem pra outras aulas.
+function toScopeClass(ucId: string): string {
+  return `slide-css-scope-${ucId.replace(/[^a-zA-Z0-9_-]/g, '-')}`;
+}
+
 export const SlideRenderer: React.FC<SlideRendererProps> = ({ node, onComplete }) => {
   const slides = useMemo(
     () => splitSlides(node.markdownContent?.trim() || DEFAULT_MARKDOWN),
@@ -57,8 +64,17 @@ export const SlideRenderer: React.FC<SlideRendererProps> = ({ node, onComplete }
     [slides, currentSlide]
   );
 
+  const scopeClass = useMemo(() => toScopeClass(node.id), [node.id]);
+
   return (
     <div className="flex flex-col gap-5">
+      {/* CSS customizado desta aula (lesson_slide_styles) — texto puro dentro de
+          <style>, nunca dangerouslySetInnerHTML, então não é um vetor de injeção
+          de script mesmo vindo direto do editor do Class Studio. */}
+      {node.customCss?.trim() && (
+        <style>{`.${scopeClass} {\n${node.customCss}\n}`}</style>
+      )}
+
       {/* Header Progress */}
       <div className="bg-white border border-slate-200 rounded-md p-4 shadow-2xs flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -86,7 +102,7 @@ export const SlideRenderer: React.FC<SlideRendererProps> = ({ node, onComplete }
       </div>
 
       {/* Slide Content */}
-      <div className="bg-white border border-slate-200 rounded-md p-6 shadow-2xs min-h-[280px]">
+      <div className={`bg-white border border-slate-200 rounded-md p-6 shadow-2xs min-h-[280px] ${scopeClass}`}>
         <div
           className="prose prose-slate prose-sm max-w-none prose-headings:font-semibold prose-img:rounded-md"
           dangerouslySetInnerHTML={{ __html: slideHtml }}

@@ -308,6 +308,19 @@ O hash é calculado com `crypto.subtle.digest('SHA-256', ...)` (Web Crypto, roda
 
 **Retrofit e verificação (2026-09-23):** as 18 aulas já formatadas antes do protocolo existir ganharam `slide-id` retroativamente do lado Works Manager — exceto o "slide 0" (o trecho antes do primeiro `---`, geralmente um comentário de preâmbulo tipo `(resumo para apresentação)`), que a rotina de retrofit deles não cobria por não ter um `---` anterior para ancorar a inserção. Corrigido aqui com o mesmo `ensureSlideIds()` (determinístico, preservando os IDs já existentes). As 15 aulas que ainda estavam em texto corrido ganharam `slide-id` em todos os slides ao passar pelo Auto-Formatar. **224 slides, 0 sem identificação, todos com snapshot de linha de base.** Testado simulando uma inserção real de slide no meio de uma aula: o slide novo foi classificado como "new" e os 4 slides deslocados como "moved" — nenhum interpretado como "changed" ou perdido.
 
+### 7.7 CSS customizado por aula (`LessonStyleService.ts` / `public.lesson_slide_styles`)
+
+Até 2026-09-23, a formatação visual de todo slide era 100% genérica — a mesma classe `prose prose-slate prose-sm ...` (Tailwind Typography) aplicada igual em qualquer aula, sem nenhuma forma de uma aula específica se destacar ou corrigir algo visualmente sem mexer no motor de renderização inteiro. Não existe (nem existiu) suporte real a Marp neste repositório — o comentário `<!-- Formato compatível com Marp... -->` que aparece em algumas aulas do Works Manager é só um resquício de texto vindo do lado deles; aqui ele nunca foi interpretado como diretiva de tema/CSS.
+
+**O que existe agora:** uma aula pode ter CSS próprio, escrito no Class Studio, que só afeta ela mesma.
+
+- `public.lesson_slide_styles` (`src/player/db/lesson_slide_styles.sql`) — tabela própria deste repositório, chave primária `lesson_id` (FK para `public.lessons`, `ON DELETE CASCADE`), coluna `custom_css TEXT`. Não altera o schema de `lessons` (que é do Works Manager) de forma alguma — mesmo padrão de "tabela satélite" já usado por `lessons_sync_state`/`lessons_slide_sync_state`.
+- `LessonStyleService.ts` — `fetchStyle(lessonId)` (uma aula), `fetchStylesForLessons(lessonIds[])` (lote, usado por `CourseManifestService.buildManifestFromLessons` pra não fazer uma query por aula ao montar o manifesto de um curso inteiro), `saveStyle(lessonId, css)` (upsert; string vazia apaga a linha em vez de manter um registro em branco).
+- `LearningObject.customCss` (novo campo em `types.ts`) carrega o CSS da aula do banco até `SlideRenderer`, passando por `MergedNodeProgress` sem nenhuma mudança extra (é um spread de `LearningObject`).
+- **Escopo, não vazamento**: `SlideRenderer.tsx` injeta o CSS dentro de um `<style>{...}</style>` (texto puro — nunca `dangerouslySetInnerHTML`, então não é um vetor de injeção de script mesmo vindo direto do textarea do editor), envolvido por um seletor único derivado do `uc_id` da aula: `.slide-css-scope-<uc_id> { <css do autor> }`. Isso usa CSS nesting nativo (suportado pela mesma baseline de navegador que o Tailwind v4 já exige) — o autor escreve regras soltas (`h1 { color: red }`, `.prose img { ... }`) sem precisar prefixar nada, e elas nunca escapam pra fora do container daquela aula nem afetam outras.
+- **Editor (`AdminSlideEditor.tsx`)**: o painel esquerdo agora tem duas abas — "Markdown" e "CSS da Aula" (marcada com `•` quando já tem algo salvo) — compartilhando a mesma pré-visualização à direita, que reflete o CSS em tempo real conforme digitado. Salvar a aula persiste as duas coisas juntas.
+- Testado ponta a ponta contra o Supabase real: upsert, leitura individual, leitura em lote (`.in`) e delete, todos confirmados com uma aula real antes de reverter (não é conteúdo de demonstração deixado no banco).
+
 ---
 
 ## 8. Como a aula chega até a trilha do curso
@@ -351,6 +364,7 @@ No Dashboard (`DashboardView.tsx`), o card do curso real é populado por `Course
 | Detecção de mudanças por aula (Nova/Alterada/Sincronizada) | `src/player/services/LessonSyncService.ts`, `public.lessons_sync_state` |
 | Utilitários puros de slide-id (parsing, slugify) | `src/lib/slideId.ts` (sem dependência de browser/Supabase — usado também por `api/format-lesson.ts`) |
 | Detecção de mudanças por slide (Novo/Movido/Alterado/Inalterado) | `src/player/services/SlideSyncService.ts`, `public.lessons_slide_sync_state` |
+| CSS customizado por aula (escopado, não vaza entre aulas) | `src/player/services/LessonStyleService.ts`, `public.lesson_slide_styles` |
 | Render do slide (aluno e preview do editor) | `src/player/components/renderers/SlideRenderer.tsx` |
 | Tela de reprodução do OA | `src/player/components/OAPlayerView.tsx` |
 | Roteamento manual (`/class-studio`) | `src/main.tsx` |

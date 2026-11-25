@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { LessonEditorService, LessonRecord } from '../services/LessonEditorService';
 import { LessonSyncService } from '../services/LessonSyncService';
+import { LessonStyleService } from '../services/LessonStyleService';
 import { SlideSyncService, ParsedSlide, SlideStatus } from '../services/SlideSyncService';
 import { MergedNodeProgress } from '../types';
 import { SlideRenderer } from './renderers/SlideRenderer';
@@ -30,6 +31,8 @@ interface AdminSlideEditorProps {
 export const AdminSlideEditor: React.FC<AdminSlideEditorProps> = ({ lessonId }) => {
   const [lesson, setLesson] = useState<LessonRecord | null>(null);
   const [draft, setDraft] = useState('');
+  const [cssDraft, setCssDraft] = useState('');
+  const [activeTab, setActiveTab] = useState<'markdown' | 'css'>('markdown');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -63,11 +66,12 @@ export const AdminSlideEditor: React.FC<AdminSlideEditorProps> = ({ lessonId }) 
   useEffect(() => {
     let cancelled = false;
     setIsLoading(true);
-    LessonEditorService.fetchLesson(lessonId)
-      .then(record => {
+    Promise.all([LessonEditorService.fetchLesson(lessonId), LessonStyleService.fetchStyle(lessonId)])
+      .then(([record, css]) => {
         if (cancelled) return;
         setLesson(record);
         setDraft(record?.markdown_content ?? '');
+        setCssDraft(css);
       })
       .catch(err => {
         if (cancelled) return;
@@ -122,6 +126,7 @@ export const AdminSlideEditor: React.FC<AdminSlideEditorProps> = ({ lessonId }) 
     setStatusMsg(null);
     try {
       await LessonEditorService.saveLessonMarkdown(lessonId, draft);
+      await LessonStyleService.saveStyle(lessonId, cssDraft);
       await LessonSyncService.markReviewed(lessonId, draft);
       await SlideSyncService.markAllReviewed(lessonId, draft);
       setStatusMsg({ text: 'Conteúdo salvo com sucesso.', isError: false });
@@ -168,6 +173,7 @@ export const AdminSlideEditor: React.FC<AdminSlideEditorProps> = ({ lessonId }) 
     order: lesson?.order ?? 0,
     prerequisites: [],
     markdownContent: draft,
+    customCss: cssDraft,
     state: 'AVAILABLE',
     score: null,
     is_exempt_by_dnt: false,
@@ -240,42 +246,62 @@ export const AdminSlideEditor: React.FC<AdminSlideEditorProps> = ({ lessonId }) 
         {/* Markdown Editor */}
         <div className="flex flex-col border-r border-slate-200 overflow-hidden">
           <div className="px-4 py-2 border-b border-slate-200 bg-white flex items-center justify-between shrink-0">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Markdown</span>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               <button
-                onClick={handleFormat}
-                disabled={isFormatting || isUploading}
-                className="flex items-center gap-1.5 px-3 py-1.5 border border-purple-200 bg-purple-50 rounded-md text-xs font-medium text-purple-700 hover:bg-purple-100 disabled:opacity-50 transition-colors"
+                onClick={() => setActiveTab('markdown')}
+                className={`text-xs font-semibold uppercase tracking-wide px-2 py-1 rounded-md transition-colors ${
+                  activeTab === 'markdown' ? 'bg-slate-100 text-slate-800' : 'text-slate-400 hover:text-slate-600'
+                }`}
               >
-                <span className="material-symbols-outlined text-sm">auto_awesome</span>
-                {isFormatting ? 'Formatando…' : 'Auto-Formatar (IA)'}
+                Markdown
               </button>
               <button
-                onClick={handleImageButtonClick}
-                disabled={isUploading || isFormatting}
-                className="flex items-center gap-1.5 px-3 py-1.5 border border-slate-200 rounded-md text-xs font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors"
+                onClick={() => setActiveTab('css')}
+                className={`text-xs font-semibold uppercase tracking-wide px-2 py-1 rounded-md transition-colors ${
+                  activeTab === 'css' ? 'bg-slate-100 text-slate-800' : 'text-slate-400 hover:text-slate-600'
+                }`}
+                title="CSS aplicado só a esta aula, sem afetar as outras"
               >
-                <span className="material-symbols-outlined text-sm">image</span>
-                {isUploading ? 'Enviando…' : 'Inserir imagem'}
+                CSS da Aula{cssDraft.trim() ? ' •' : ''}
               </button>
-              <button
-                onClick={() => setIsImageModalOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 border border-slate-200 rounded-md text-xs font-medium text-slate-600 hover:bg-slate-50 transition-colors"
-              >
-                <span className="material-symbols-outlined text-sm">photo_library</span>
-                Importar Imagens{pendingImageCount > 0 ? ` (${pendingImageCount})` : ''}
-              </button>
-              {missingIdCount > 0 && (
-                <button
-                  onClick={handleAssignMissingIds}
-                  className="flex items-center gap-1.5 px-3 py-1.5 border border-purple-200 bg-purple-50 rounded-md text-xs font-medium text-purple-700 hover:bg-purple-100 transition-colors"
-                  title="Atribui um slide-id determinístico (sem IA) a todo slide que ainda não tenha"
-                >
-                  <span className="material-symbols-outlined text-sm">tag</span>
-                  Atribuir IDs faltantes ({missingIdCount})
-                </button>
-              )}
             </div>
+            {activeTab === 'markdown' && (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleFormat}
+                  disabled={isFormatting || isUploading}
+                  className="flex items-center gap-1.5 px-3 py-1.5 border border-purple-200 bg-purple-50 rounded-md text-xs font-medium text-purple-700 hover:bg-purple-100 disabled:opacity-50 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-sm">auto_awesome</span>
+                  {isFormatting ? 'Formatando…' : 'Auto-Formatar (IA)'}
+                </button>
+                <button
+                  onClick={handleImageButtonClick}
+                  disabled={isUploading || isFormatting}
+                  className="flex items-center gap-1.5 px-3 py-1.5 border border-slate-200 rounded-md text-xs font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-sm">image</span>
+                  {isUploading ? 'Enviando…' : 'Inserir imagem'}
+                </button>
+                <button
+                  onClick={() => setIsImageModalOpen(true)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 border border-slate-200 rounded-md text-xs font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-sm">photo_library</span>
+                  Importar Imagens{pendingImageCount > 0 ? ` (${pendingImageCount})` : ''}
+                </button>
+                {missingIdCount > 0 && (
+                  <button
+                    onClick={handleAssignMissingIds}
+                    className="flex items-center gap-1.5 px-3 py-1.5 border border-purple-200 bg-purple-50 rounded-md text-xs font-medium text-purple-700 hover:bg-purple-100 transition-colors"
+                    title="Atribui um slide-id determinístico (sem IA) a todo slide que ainda não tenha"
+                  >
+                    <span className="material-symbols-outlined text-sm">tag</span>
+                    Atribuir IDs faltantes ({missingIdCount})
+                  </button>
+                )}
+              </div>
+            )}
             <input
               ref={fileInputRef}
               type="file"
@@ -284,14 +310,24 @@ export const AdminSlideEditor: React.FC<AdminSlideEditorProps> = ({ lessonId }) 
               onChange={handleFileSelected}
             />
           </div>
-          <textarea
-            ref={textareaRef}
-            value={draft}
-            onChange={e => setDraft(e.target.value)}
-            spellCheck={false}
-            placeholder={'# Título do slide\nConteúdo...\n\n---\n\n## Próximo slide'}
-            className="flex-1 p-4 font-mono text-sm text-slate-800 resize-none focus:outline-none overflow-y-auto"
-          />
+          {activeTab === 'markdown' ? (
+            <textarea
+              ref={textareaRef}
+              value={draft}
+              onChange={e => setDraft(e.target.value)}
+              spellCheck={false}
+              placeholder={'# Título do slide\nConteúdo...\n\n---\n\n## Próximo slide'}
+              className="flex-1 p-4 font-mono text-sm text-slate-800 resize-none focus:outline-none overflow-y-auto"
+            />
+          ) : (
+            <textarea
+              value={cssDraft}
+              onChange={e => setCssDraft(e.target.value)}
+              spellCheck={false}
+              placeholder={'/* CSS aplicado só a esta aula (não vaza pra outras). Ex.: */\nh1 { color: #005daa; }\n.prose img { border-radius: 12px; }'}
+              className="flex-1 p-4 font-mono text-sm text-slate-800 resize-none focus:outline-none overflow-y-auto"
+            />
+          )}
         </div>
 
         {/* Live Preview */}

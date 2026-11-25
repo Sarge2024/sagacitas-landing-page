@@ -17,6 +17,7 @@ export interface LearningObject {
   code_snippet?: string;
   interactive_type?: 'simulator' | 'quiz' | 'video' | 'lab' | 'project' | 'slide';
   markdownContent?: string; // Raw markdown for 'slide' OAs, slides separated by '---' (from lessons.markdown_content)
+  customCss?: string; // CSS específico desta aula (from lesson_slide_styles.custom_css), aplicado com escopo pelo SlideRenderer
   quiz_questions?: Array<{
     id: string;
     question: string;
