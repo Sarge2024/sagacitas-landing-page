@@ -42,6 +42,7 @@ const Navbar = ({ onOpenModal }: { onOpenModal: () => void }) => {
           <a className="text-on-surface-variant hover:text-primary font-headline font-bold tracking-tight transition-all duration-300" href="#quem-somos">Quem Somos</a>
           <a className="text-on-surface-variant hover:text-primary font-headline font-bold tracking-tight transition-all duration-300" href="#servicos">Serviços</a>
           <a className="text-on-surface-variant hover:text-primary font-headline font-bold tracking-tight transition-all duration-300" href="#clientes">Clientes</a>
+          <a className="text-on-surface-variant hover:text-primary font-headline font-bold tracking-tight transition-all duration-300" href="#produtos">Produtos</a>
           <a className="text-on-surface-variant hover:text-primary font-headline font-bold tracking-tight transition-all duration-300" href="#contato">Contato</a>
           <button onClick={onOpenModal} className="bg-primary text-on-primary px-6 py-2 rounded-sm font-bold text-sm hover:opacity-80 transition-all duration-300 active:scale-95">
             Área do Cliente
@@ -60,6 +61,7 @@ const Navbar = ({ onOpenModal }: { onOpenModal: () => void }) => {
           <a className="text-on-surface-variant font-bold px-4 py-2" href="#quem-somos" onClick={() => setIsOpen(false)}>Quem Somos</a>
           <a className="text-on-surface-variant font-bold px-4 py-2" href="#servicos" onClick={() => setIsOpen(false)}>Serviços</a>
           <a className="text-on-surface-variant font-bold px-4 py-2" href="#clientes" onClick={() => setIsOpen(false)}>Clientes</a>
+          <a className="text-on-surface-variant font-bold px-4 py-2" href="#produtos" onClick={() => setIsOpen(false)}>Produtos</a>
           <a className="text-on-surface-variant font-bold px-4 py-2" href="#contato" onClick={() => setIsOpen(false)}>Contato</a>
           <button onClick={() => { setIsOpen(false); onOpenModal(); }} className="bg-primary text-on-primary px-6 py-3 rounded-sm font-bold text-sm">
             Área do Cliente
@@ -262,7 +264,7 @@ const ClientPortal = ({ onOpenAuth }: { onOpenAuth: () => void }) => {
   ];
 
   return (
-    <section className="py-24 bg-primary text-on-primary">
+    <section id="produtos" className="py-24 bg-primary text-on-primary">
       <div className="max-w-7xl mx-auto px-8">
         <div className="text-center mb-16 max-w-2xl mx-auto">
           <h2 className="text-4xl font-headline font-extrabold mb-4">Seus Aplicativos de Gestão</h2>
