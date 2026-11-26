@@ -43,3 +43,8 @@ Sumário cronológico contínuo de funcionalidades e correções construídas ne
 - **Contexto**: usuário notou que não existe nenhuma configuração de CSS por aula/slide — confirmado: só havia um `prose` genérico do Tailwind Typography aplicado igual em tudo. Pediu suporte a CSS por aula.
 - **Resumo**: nova tabela satélite `public.lesson_slide_styles` (não altera `lessons`), `LessonStyleService.ts` (fetch individual/em lote, upsert), `CourseManifestService` populando `LearningObject.customCss`, `SlideRenderer.tsx` injetando o CSS escopado por `uc_id` via CSS nesting (sem vazar entre aulas, sem `dangerouslySetInnerHTML`), e uma aba "CSS da Aula" no Class Studio com preview ao vivo. Testado ponta a ponta contra o Supabase real (upsert/fetch/delete) com uma aula real, revertido depois.
 - **Detalhe completo**: `.ai/history/2026-09-23e_css_customizado_por_aula.md`.
+
+## 📅 2026-11-26 — Método de trabalho entre agentes com TDD
+- **Contexto**: o usuário definiu os papéis: Claude avalia, planeja e faz a revisão final; o Gemini executa; a passagem entre eles é por arquivo de sincronismo; testes automatizados por TDD.
+- **Resumo**: `.ai/WORKFLOW.md` e o modelo `.ai/tasks/_modelo.md`; `ai-sync task` com transições por papel e gates (lint, Vitest, prova Red→Green) na entrega e na aprovação; `pending_tasks` no `status`; Vitest instalado; `verify-red-green.mjs` trazido do gestor-de-obras; `GEMINI.md` com as instruções do executor. Ciclo completo testado numa cópia descartável do repositório.
+- **Detalhe completo**: `.ai/history/2026-11-26_metodo_trabalho_agentes_tdd.md`.

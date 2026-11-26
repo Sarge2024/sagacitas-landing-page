@@ -30,6 +30,12 @@ node scripts/ai-sync.mjs write --agent claude \
 ```
 Isso apensa a linha, atualiza `STATE.json` e já avança o cursor de quem escreveu (quem escreve já está "em dia"). Antes de registrar, rodar `npm run lint` (`tsc --noEmit`) e `npm run build` — devem estar limpos.
 
+### Tarefas entre agentes (Claude planeja e revisa, Gemini executa)
+```bash
+node scripts/ai-sync.mjs task --agent gemini --id 2026-11-26_slug --to em_execucao
+```
+Muda o status de `.ai/tasks/<id>.md`, valida papel e transição, roda os gates (lint, testes, Red→Green) na entrega e na aprovação, e apensa uma linha com `task` e `kind`. O `status` passa a listar `pending_tasks` do agente. Fluxo completo: `.ai/WORKFLOW.md`.
+
 ## Regra de integração com o resto do `.ai/`
 
 - Toda entrada nova em `.ai/history/` DEVE gerar uma linha aqui (com `ref` preenchido apontando para ela).

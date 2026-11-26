@@ -25,14 +25,14 @@ PHASES = [
       mode="Essencial · Opex",
       rows=[("Gatilho","Do primeiro contato comercial até a <b>assinatura do contrato</b> de obra"),
             ("Contabilidade","<b>Opex</b> — despesa corrente do período"),
-            ("O que roda","Orçamentos CUB paramétrico, propostas, simulações de cenário, planejamento preliminar"),
+            ("O que roda","Orçamento CUB paramétrico, premissas de obra, cronograma físico-financeiro e histograma planejados"),
             ("Duração","Variável — enquanto a obra está em negociação")],
       foot="Manter a máquina ligada sem assumir custo de projeto"),
  dict(id="02", name="Execução &amp; Gestão", short="Execução", price="R$ 2.490/mês",
-      mode="Profissional · incremento R$ 1.600",
+      mode="Professional · incremento R$ 1.600",
       rows=[("Gatilho","Contrato assinado + <b>ordem de início</b> emitida"),
             ("Contabilidade","Incremento de R$ 1.600/mês como <em>Capex do projeto</em>, recuperável via BDI"),
-            ("O que roda","Todos os cinco módulos: EAP, Gantt, físico-financeiro, RDO em campo, custos e BDI"),
+            ("O que roda","Composição SINAPI/SICRO, Budget Pro, cronograma executivo, frota, RDOs Recebidos, DRE da obra e fluxo de caixa"),
             ("Duração","3 a 18 meses, conforme porte e tipologia")],
       foot="O único momento em que o software custa caro — e a obra está faturando"),
  dict(id="03", name="Encerramento &amp; Transição", short="Encerramento", price="R$ 890/mês",
@@ -105,66 +105,63 @@ CONTRACT = """
   <div class="sec-head">
     <span class="sec-id">// 03</span>
     <h2 class="sec-title">Contratação</h2>
-    <p class="sec-desc">Três níveis de entrada, um mesmo sistema. Comece pelo orçamento e suba quando a obra começar — sem trocar de plataforma e sem perder o histórico.</p>
+    <p class="sec-desc">Três planos com herança cumulativa: cada um inclui tudo do anterior. Comece pelo orçamento e suba quando a obra começar — sem trocar de plataforma e sem perder o histórico.</p>
   </div>
 
   <div class="plans">
     <article class="plan">
-      <div class="plan-k">Nível 01 · entrada</div>
+      <div class="plan-k">Nível 01 · obra individual</div>
       <h3>Essencial</h3>
       <div class="plan-price">R$ 890<small>/mês</small></div>
-      <p class="plan-commit">Sem fidelidade · a linha de base permanente do ciclo Opex</p>
+      <p class="plan-commit">Sem fidelidade · a linha de base permanente do ciclo Opex · até 5 usuários e 3 projetos</p>
       <ul>
-        <li>Cadastros operacionais: funcionários com CBO, equipes, ativos</li>
-        <li>Orçamento CUB paramétrico com sliders de macroetapa</li>
-        <li>Propostas comerciais em PDF e versionamento</li>
-        <li>Exportação de dados em CSV, JSON, PDF e ZIP</li>
-        <li>Suporte por WhatsApp e e-mail · resposta em 48h úteis</li>
+        <li>Orçamento CUB paramétrico com padrão TCPO e catálogo local de preços</li>
+        <li>Cronograma físico-financeiro e histograma gerados do orçamento</li>
+        <li>OS e equipes manuais, cadastro de funcionários e ativos</li>
+        <li>RDO em campo com medição direta por período</li>
+        <li>Previsto × realizado de despesas e receitas por obra</li>
       </ul>
       <a class="plan-go" href="#contratar">Contratar Essencial <i>&#8594;</i></a>
     </article>
 
     <article class="plan hl">
-      <div class="plan-tag">Mais escolhido</div>
-      <div class="plan-k">Nível 02 · execução</div>
-      <h3>Budget Pro</h3>
-      <div class="plan-price">R$ 1.590<small>/mês</small></div>
-      <p class="plan-commit">6 meses · orçamento completo mais gestão e campo</p>
+      <div class="plan-tag">Obra em execução</div>
+      <div class="plan-k">Nível 02 · obra + recursos</div>
+      <h3>Professional</h3>
+      <div class="plan-price">R$ 2.490<small>/mês</small></div>
+      <p class="plan-commit">Tudo do Essencial · incremento de R$ 1.600 imputável à obra via BDI</p>
       <ul>
-        <li>Tudo do Essencial, com orçamento analítico completo</li>
-        <li>EAP/WBS e Gantt CPM com caminho crítico</li>
-        <li>Curva S físico-financeira e histograma de mão de obra</li>
-        <li>RDO em campo: app offline com idempotência</li>
-        <li>Suporte por WhatsApp, e-mail e telefone · 24h úteis</li>
+        <li>Composição SINAPI, SICRO, DER, IOPES e CMG, com Budget Pro incluso</li>
+        <li>Cronograma executivo, equipes por EAP e nivelamento de recursos</li>
+        <li>OS geradas das composições e RDOs Recebidos com revisão</li>
+        <li>Frota com horímetro e manutenção de veículos</li>
+        <li>Compras, DRE da obra, fluxo de caixa, RH e IA</li>
       </ul>
-      <a class="plan-go" href="#contratar">Contratar Budget Pro <i>&#8594;</i></a>
+      <a class="plan-go" href="#contratar">Contratar Professional <i>&#8594;</i></a>
     </article>
 
     <article class="plan">
-      <div class="plan-k">Nível 03 · completa</div>
-      <h3>Professional</h3>
-      <div class="plan-price">R$ 2.490<small>/mês</small></div>
-      <p class="plan-commit">12 meses · todos os cinco módulos integrados</p>
+      <div class="plan-k">Nível 03 · construtora</div>
+      <h3>Enterprise</h3>
+      <div class="plan-price">Sob consulta</div>
+      <p class="plan-commit">Tudo do Professional · visão consolidada de todas as obras</p>
       <ul>
-        <li>Tudo do Budget Pro, com os cinco módulos ativos</li>
-        <li>Custos &amp; BDI auditável: CBO/CCT, encargos e Acórdão TCU</li>
-        <li>Telemetria de frota e manutenção por horímetro</li>
-        <li>Imputação do incremento como Capex do projeto, via BDI</li>
-        <li>Suporte dedicado com base de testes antecipada</li>
+        <li>Orçamento empresarial, plano de contas e centros de custo e lucro</li>
+        <li>DRE da construtora e captação de capital (BNDES, Caixa, NCG)</li>
+        <li>Almoxarifado e controle de materiais por obra e OS</li>
+        <li>Manutenção de máquinas e ferramentas</li>
+        <li>Certificados, trilha de treinamento e IA estendida</li>
       </ul>
-      <a class="plan-go" href="#contratar">Contratar Professional <i>&#8594;</i></a>
+      <a class="plan-go" href="mailto:contato@sagacitas.com.br?subject=Works%20Manager%20Enterprise">Falar sobre o Enterprise <i>&#8594;</i></a>
     </article>
   </div>
 
   <div class="addons">
-    <div class="addon"><div class="addon-name"><b>RDO Starter</b><span>Freemium · até 2 obras</span></div><div class="addon-price">R$ 149/mês</div></div>
-    <div class="addon"><div class="addon-name"><b>02 · Orçamento de Obras</b><span>Módulo avulso</span></div><div class="addon-price">R$ 1.290/mês</div></div>
-    <div class="addon"><div class="addon-name"><b>03 · Gestão da Obra</b><span>Módulo avulso</span></div><div class="addon-price">R$ 1.890/mês</div></div>
-    <div class="addon"><div class="addon-name"><b>04 · RDO em Campo</b><span>Módulo avulso</span></div><div class="addon-price">R$ 1.590/mês</div></div>
-    <div class="addon"><div class="addon-name"><b>05 · Custos &amp; BDI</b><span>Módulo avulso</span></div><div class="addon-price">R$ 990/mês</div></div>
+    <div class="addon"><div class="addon-name"><b>Budget Pro</b><span>Orçamento por produtividade · avulso no Essencial, incluso no Professional</span></div><div class="addon-price">sob consulta</div></div>
+    <div class="addon"><div class="addon-name"><b>Reformas</b><span>Diagnóstico de patologias e orçamento de reforma · Professional e Enterprise</span></div><div class="addon-price">sob consulta</div></div>
+    <div class="addon"><div class="addon-name"><b>RDO Full</b><span>Projeto sem orçamento, só para medir e cobrar</span></div><div class="addon-price">sob consulta</div></div>
     <div class="addon"><div class="addon-name"><b>Implantação Essencial</b><span>Setup · 5 dias úteis</span></div><div class="addon-price">R$ 4.900</div></div>
     <div class="addon"><div class="addon-name"><b>Implantação Professional</b><span>Setup · 15 dias úteis</span></div><div class="addon-price">R$ 12.900</div></div>
-    <div class="addon"><div class="addon-name"><b>Enterprise</b><span>Customizações · BI · integrações</span></div><div class="addon-price">sob consulta</div></div>
   </div>
 
   <div class="terms">
@@ -174,11 +171,11 @@ CONTRACT = """
     <div><div class="k">Dados</div><div class="v">100% do cliente. Exportação gratuita e conta desativada em até 7 dias úteis.</div></div>
   </div>
 
-  <p class="contract-note"><span>·</span><span><b>Rótulo em definição.</b> O nível intermediário aparece como <b>Budget Pro</b> nesta página; nos materiais atuais de proposta e arquitetura o mesmo plano está nomeado <b>Executor</b>, com preço e escopo idênticos aos apresentados aqui.</span></p>
+  <p class="contract-note"><span>·</span><span><b>Preços em definição.</b> O plano Enterprise e os addons Budget Pro, Reformas e RDO Full ainda não têm preço de tabela. Fale com a gente para uma proposta.</span></p>
 
   <div class="contract-cta">
-    <p>Demonstração de 60 min em ambiente sandbox <br><b>contato@gestordeobras.com.br · (11) 4000-0000</b></p>
-    <a class="btn solid" href="#contratar">Agendar demonstração <span>&#8594;</span></a>
+    <p>Demonstração de 60 min em ambiente sandbox <br><b>contato@sagacitas.com.br</b></p>
+    <a class="btn solid" href="mailto:contato@sagacitas.com.br?subject=Demonstracao%20Works%20Manager">Agendar demonstração <span>&#8594;</span></a>
   </div>
 </section>
 """
@@ -191,22 +188,22 @@ SLIDES = [
 ]
 
 CARDS = [
- dict(slug="prancha-01-orcamento.html", img="orcamento.jpg", num="Prancha 01 · módulos 02 + 05",
-      title="Orçamento", desc="CUB paramétrico para responder no mesmo dia; composição SINAPI e SICRO para responder certo. BDI auditável conforme Acórdão TCU 2.622/2013, encargos Grupos A–E e proposta em PDF.",
-      tags=["CUB · SINAPI · SICRO","BDI auditável","Proposta em PDF","Previsto × realizado"],
-      go="Abrir a prancha 01", flag="N1 e N2 na v1.0", first=True),
- dict(slug="prancha-02-planejamento.html", img="planejamento.jpg", num="Prancha 02 · módulo 02",
-      title="Planejamento", desc="EAP/WBS e Gantt CPM com caminho crítico automático, curva S e histograma. O cronograma nasce do orçamento aprovado e vira onda de compra.",
-      tags=["EAP/WBS","Gantt CPM","Curva S","Ondas de compra"],
-      go="Abrir a prancha 02", flag="N1 v1.0 · N2 v1.1"),
- dict(slug="prancha-03-execucao.html", img="execucao.jpg", num="Prancha 03 · módulos 03 + 04",
-      title="Execução &amp; RDO", desc="Ordem de serviço vinculada à EAP e RDO offline com idempotência. O diário de obra mantém valor de prova mesmo quando o canteiro perde sinal.",
-      tags=["OS na EAP","RDO offline","Fotos georreferenciadas","Telemetria"],
-      go="Abrir a prancha 03", flag="N1 v1.0 · N2 v1.1"),
- dict(slug="prancha-04-ativos-frota.html", img="frota.jpg", num="Prancha 04 · módulo 05",
-      title="Ativos &amp; frota", desc="Almoxarifado com saldo por obra, curva ABC do que consome o orçamento e manutenção preventiva disparada pela hora real de máquina.",
-      tags=["Curva ABC","Almoxarifado","Manutenção por horímetro","Custo por equipamento"],
-      go="Abrir a prancha 04", flag="N1 v1.0 · N2 v1.1"),
+ dict(slug="prancha-01-orcamento.html", img="orcamento.jpg", num="Prancha 01 · orçamentação",
+      title="Orçamento", desc="CUB paramétrico para responder no mesmo dia; composição SINAPI, SICRO, DER e IOPES ou produtividade TCPO no Budget Pro para responder certo. Premissas versionadas e addon de reformas com diagnóstico de patologias.",
+      tags=["CUB · SINAPI · SICRO","Budget Pro","Premissas versionadas","Reformas"],
+      go="Abrir a prancha 01", flag="Essencial · Professional", first=True),
+ dict(slug="prancha-02-planejamento.html", img="planejamento.jpg", num="Prancha 02 · planejamento",
+      title="Planejamento", desc="EAP a partir de estruturas de obra e Gantt CPM com folgas reais, dias úteis e regras de cura ABNT/TCPO. Físico-financeiro, histograma, nivelamento de recursos e planejamento de compras.",
+      tags=["Estruturas de obra","Gantt CPM","Regras ABNT/TCPO","Nivelamento"],
+      go="Abrir a prancha 02", flag="Essencial · Professional"),
+ dict(slug="prancha-03-execucao.html", img="execucao.jpg", num="Prancha 03 · execução",
+      title="Execução &amp; RDO", desc="Ordem de serviço vinculada à EAP e RDO offline com idempotência e controle de dispositivos. O diário de obra alimenta a medição do período, com revisão no Professional.",
+      tags=["OS na EAP","RDO offline","Medição por período","RDO Full"],
+      go="Abrir a prancha 03", flag="Todos os planos"),
+ dict(slug="prancha-04-ativos-frota.html", img="frota.jpg", num="Prancha 04 · ativos",
+      title="Ativos &amp; frota", desc="Frota com odômetro e horímetro, planos de manutenção preventiva e ocorrências pelo app. No Enterprise, almoxarifado, materiais por obra e manutenção de máquinas.",
+      tags=["Horímetro","Manutenção preventiva","Almoxarifado","Materiais por obra"],
+      go="Abrir a prancha 04", flag="Professional · Enterprise"),
 ]
 
 def b64(name):
@@ -256,12 +253,14 @@ __THEME_HEAD__
 <body>
 
 <header class="rail">
-  <div class="brand">WORKS<b>·</b>MANAGER</div>
+  <div class="brand"><a href="/" style="color:inherit;text-decoration:none;">SAGACITAS</a><b>·</b>WORKS<b>·</b>MANAGER</div>
   <div class="rail-meta">Dossiê de capacidades · nov 2026</div>
   __THEME_TOGGLE__
   <nav class="nav" aria-label="Seções">
+    <a href="/">← Voltar à Sagacitas</a>
     <a href="#pranchas">Pranchas</a>
     <a href="#modelo">Modelo cíclico</a>
+    <a href="#contratar">Planos</a>
     <a class="cta" href="#pranchas">Começar a leitura</a>
   </nav>
 </header>
@@ -271,7 +270,7 @@ __THEME_HEAD__
     <div>
       <p class="eyebrow">Gestão de obras <s>·</s> publicação de capacidades <s>·</s> quatro pranchas</p>
       <h1>A obra inteira, <em>prancha por prancha.</em></h1>
-      <p class="lede">Orçamento, planejamento, execução e frota num só sistema modular. Cada etapa entra em cena com as atividades que realmente acontecem — e o custo do software acompanha o <b>ciclo de caixa de cada obra</b>, não o calendário do contrato.</p>
+      <p class="lede">Orçamento, planejamento, execução e frota num só sistema, em três planos. Cada etapa entra em cena com as atividades que realmente acontecem — e o custo do software acompanha o <b>ciclo de caixa de cada obra</b>, não o calendário do contrato.</p>
       <div class="cover-act">
         <a class="btn solid" href="#pranchas">Ver as quatro pranchas <span>→</span></a>
         <a class="btn" href="#modelo">Entender o modelo cíclico</a>
@@ -294,7 +293,7 @@ __THEME_HEAD__
   <div class="sec-head">
     <span class="sec-id">// 01</span>
     <h2 class="sec-title">Quatro pranchas, quatro etapas</h2>
-    <p class="sec-desc">Cada prancha abre o módulo em detalhe: as atividades, os dois níveis de automação e a ficha técnica com escopo e preço.</p>
+    <p class="sec-desc">Cada prancha abre a etapa em detalhe: as atividades, o que entra em cada plano e a ficha técnica com escopo e preço.</p>
   </div>
   <div class="cards">{cards}</div>
 </section>
@@ -340,7 +339,7 @@ __CONTRACT__
 
 <section class="close">
   <h2>Comece pela etapa que dói hoje.</h2>
-  <p>A construtora entra em qualquer ponto do ciclo e sobe sem trocar de plataforma — cada módulo tem nível assistido de entrada e nível automatizado de upgrade. Quem começa pelo RDO pode terminar com o orçamento analítico completo.</p>
+  <p>A construtora entra em qualquer ponto do ciclo e sobe sem trocar de plataforma — cada plano herda tudo do anterior e os dados nunca se perdem no upgrade. Quem começa pelo RDO pode terminar com o orçamento analítico completo.</p>
   <div class="plates">{plates}</div>
   <a class="btn solid" href="prancha-01-orcamento.html">Abrir a prancha 01 · Orçamento <span>→</span></a>
 </section>
@@ -348,7 +347,7 @@ __CONTRACT__
 </main>
 
 <footer>
-  <p>Works Manager · Gestor de Obras Tecnologia · documento de apresentação, novembro de 2026. Números de mercado, preços e escopo conforme análise competitiva v2.0, proposta comercial set/2026 e arquitetura v1.1.0.</p>
+  <p>Works Manager · Gestor de Obras Tecnologia · documento de apresentação, novembro de 2026. Escopo por plano conforme a documentação do sistema v1.10.1 (ADR-013 e especificação de módulos comerciais v1.1). Números de mercado conforme análise competitiva v2.0; preços conforme proposta comercial set/2026.</p>
   <p>Capa · 4 pranchas</p>
 </footer>
 

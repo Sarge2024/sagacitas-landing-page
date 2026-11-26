@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Prancha 03 · Execução — Works Manager</title>
-<meta name="description" content="Ordens de serviço vinculadas à EAP e RDO offline com idempotência, fotos georreferenciadas e telemetria.">
+<meta name="description" content="Ordens de serviço vinculadas à EAP, RDO offline com idempotência e controle de dispositivos, medição por período e addon RDO Full para projetos sem orçamento.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Saira:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -330,7 +330,7 @@ h1{
 <main class="sheet">
 <div class="frame">
   <div class="sheet-head">
-    <span>Gestão de obras · <b>Módulo 03 · Execução (OS) + Módulo 04 · RDO em Campo</b></span>
+    <span>Gestão de obras · <b>Execução · ordens de serviço, RDO em campo e medição</b></span>
     <span>Prancha <b>03/04</b> · Nov 2026</span>
   </div>
 
@@ -339,8 +339,8 @@ h1{
     <div class="hero-copy">
       <p class="eyebrow">Prancha 03 <s>·</s> Execução &amp; campo</p>
       <h1>O diário de obra não se perde no canteiro.</h1>
-      <p class="lede">A ordem de serviço nasce do cronograma. O RDO nasce no canteiro, offline, com idempotência que garante ao diário o valor de prova — e a telemetria fecha a produtividade real.</p>
-      <div class="chips"><span class="chip a">N1 na v1.0 · N2 na v1.1</span><span class="chip">iOS · Android · offline</span><span class="chip t">Idempotência</span></div>
+      <p class="lede">A ordem de serviço nasce da EAP. O RDO nasce no canteiro, offline, em aparelho autorizado e sem duplicar registro — e é ele que alimenta a medição do período.</p>
+      <div class="chips"><span class="chip a">RDO nos três planos</span><span class="chip">App de campo offline</span><span class="chip t">Idempotência</span></div>
     </div>
   </section>
 
@@ -348,29 +348,29 @@ h1{
     <div class="sec-head">
       <span class="sec-id">// 01</span>
       <h2 class="sec-title">O que esta prancha entrega</h2>
-      <span class="sec-note">8 atividades · <i>N1 → N2</i></span>
+      <span class="sec-note">8 atividades · <i>Essencial → Professional</i></span>
     </div>
     <div class="acts">
-      <article class="act"><div class="act-top"><span class="act-num">01</span><span class="act-tag n1">N1 assistido</span></div><h3>Ordem de serviço vinculada à EAP</h3><p>Cada OS carrega escopo, equipe, prazo e a atividade que ela realiza. O que foi executado fica rastreável até a linha do cronograma.</p></article><article class="act"><div class="act-top"><span class="act-num">02</span><span class="act-tag n2">N2 automatizado</span></div><h3>OS geradas do Gantt</h3><p>Na virada da semana, as ordens saem do cronograma para o campo. O gestor revisa e libera em vez de redigitar.</p></article><article class="act"><div class="act-top"><span class="act-num">03</span><span class="act-tag n1">N1 assistido</span></div><h3>RDO offline com idempotência</h3><p>O canteiro opera em LTE fraco. A sincronização parcial não duplica registro: cada diário tem uma chave única por obra e data.</p></article><article class="act"><div class="act-top"><span class="act-num">04</span><span class="act-tag n1">N1 assistido</span></div><h3>Fotos georreferenciadas com timestamp</h3><p>Prova de execução com coordenada, hora e autor. Serve para medir, para contestar e para defender o prazo em contrato.</p></article><article class="act"><div class="act-top"><span class="act-num">05</span><span class="act-tag n1">N1 assistido</span></div><h3>Alertas de clima, segurança e atraso</h3><p>Regras configuráveis disparam aviso por WhatsApp e e-mail quando o dia foge do previsto.</p></article><article class="act"><div class="act-top"><span class="act-num">06</span><span class="act-tag n2">N2 automatizado</span></div><h3>Produtividade por equipe e efetivo</h3><p>Horas por serviço, efetivo por dia e desvio contra o previsto. A produtividade real deixa de ser estimativa de fim de obra.</p></article><article class="act"><div class="act-top"><span class="act-num">07</span><span class="act-tag n1">N1 assistido</span></div><h3>Medição e fechamento do registro</h3><p>O fechamento do RDO gera o evento que alimenta a medição. No financeiro (v1.2), é o mesmo evento que vira título a receber.</p></article><article class="act"><div class="act-top"><span class="act-num">08</span><span class="act-tag n2">N2 automatizado</span></div><h3>Requisição de material a partir da OS</h3><p>A OS que vai começar puxa o material contra o almoxarifado da obra, com rastro de quem pediu e para qual serviço.</p></article>
+      <article class="act"><div class="act-top"><span class="act-num">01</span><span class="act-tag n1">Essencial</span></div><h3>Ordens de serviço manuais</h3><p>O gestor cria a OS com escopo, equipe e prazo e a distribui para o campo. Disponível desde o Essencial.</p></article><article class="act"><div class="act-top"><span class="act-num">02</span><span class="act-tag n2">Professional</span></div><h3>OS geradas das composições e da EAP</h3><p>Na aprovação do projeto, as OS saem do quantitativo das composições, com mão de obra, materiais e ativos associados. A geração é idempotente e incremental.</p></article><article class="act"><div class="act-top"><span class="act-num">03</span><span class="act-tag ">todos os planos</span></div><h3>RDO offline com idempotência</h3><p>O canteiro opera em sinal fraco. Cada envio tem chave única, a sincronização parcial não duplica o diário e só aparelhos autorizados transmitem.</p></article><article class="act"><div class="act-top"><span class="act-num">04</span><span class="act-tag ">todos os planos</span></div><h3>Transmissão com retomada e integridade</h3><p>O envio interrompido retoma de onde parou, o conteúdo é conferido na chegada e as fotos, com hora e localização, ganham cópia de segurança.</p></article><article class="act"><div class="act-top"><span class="act-num">05</span><span class="act-tag n2">Professional</span></div><h3>RDOs Recebidos: revisão antes de medir</h3><p>No Essencial o RDO vai direto para a medição. No Professional ele passa por revisão e aprovação antes de entrar na conta.</p></article><article class="act"><div class="act-top"><span class="act-num">06</span><span class="act-tag ">todos os planos</span></div><h3>Medição por período</h3><p>O usuário define o período e a medição soma todos os RDOs disponíveis nele. Funciona igual em todos os planos.</p></article><article class="act"><div class="act-top"><span class="act-num">07</span><span class="act-tag n2">Professional</span></div><h3>Terceirizados e locação</h3><p>Cadastro em todos os planos. No Professional, terceirizados e equipamentos locados ficam vinculados às OS e aos contratos.</p></article><article class="act"><div class="act-top"><span class="act-num">08</span><span class="act-tag ">addon</span></div><h3>RDO Full: projeto sem orçamento</h3><p>Para quem só precisa medir para cobrar: o projeto entra com a EAP montada à mão, sem orçamento, e a base de medição fica protegida contra alteração.</p></article>
     </div>
   </section>
 
   <section class="sec">
     <div class="sec-head">
       <span class="sec-id">// 02</span>
-      <h2 class="sec-title">Dois níveis, um mesmo módulo</h2>
-      <span class="sec-note">O N2 consome o dado do N1</span>
+      <h2 class="sec-title">Dois planos, um mesmo sistema</h2>
+      <span class="sec-note">Cada plano herda tudo do anterior</span>
     </div>
     <div class="levels">
       <div class="lvl">
-        <p class="lvl-k"><b>N1 · Assistido</b> — entrada</p>
-        <h4>O campo registrando à mão, com garantia de que nada será duplicado nem perdido.</h4>
-        <ul><li>OS manuais criadas e distribuídas pelo gestor</li><li>RDO offline com sincronização idempotente</li><li>Fotos georreferenciadas e alertas</li><li>Medição a partir do registro fechado</li></ul>
+        <p class="lvl-k"><b>Essencial</b> — entrada</p>
+        <h4>O campo registrando com garantia de que nada é duplicado nem perdido.</h4>
+        <ul><li>OS manuais criadas e distribuídas pelo gestor</li><li>RDO offline com sincronização idempotente</li><li>RDO disponível para medição na hora</li><li>Até 5 usuários e 3 projetos</li></ul>
       </div>
       <div class="lvl">
-        <p class="lvl-k"><b>N2 · Automatizado</b> — upgrade</p>
-        <h4>O campo alimentado pelo cronograma e medido por telemetria, não por apontamento.</h4>
-        <ul><li>OS geradas automaticamente do Gantt</li><li>Requisição de material contra o almoxarifado</li><li>Telemetria de frota: horas, ociosidade e consumo</li><li>Produtividade real fechada contra o previsto</li></ul>
+        <p class="lvl-k"><b>Professional</b> — upgrade</p>
+        <h4>O campo alimentado pela EAP e revisado antes de virar medição.</h4>
+        <ul><li>OS geradas das composições e da EAP</li><li>RDOs Recebidos com revisão e aprovação</li><li>App de campo com equipes, ativos e frentes de serviço</li><li>Rendimento de equipes e registro de NRs</li></ul>
       </div>
     </div>
   </section>
@@ -379,17 +379,17 @@ h1{
     <div class="sec-head">
       <span class="sec-id">// 03</span>
       <h2 class="sec-title">Ficha técnica</h2>
-      <span class="sec-note">Fonte: dados do projeto</span>
+      <span class="sec-note">Fonte: documentação do sistema v1.10</span>
     </div>
-    <dl class="spec"><dt>Cobre</dt><dd>Módulo 03 · Execução (OS) e Módulo 04 · RDO em Campo</dd><dt>Integridade</dt><dd>Registro único por (construtora, obra, data) · sincronização parcial sem duplicidade · evento de fechamento consumido pela medição</dd><dt>Campo</dt><dd>Aplicativo iOS e Android com operação offline · fotos com coordenada, hora e autor</dd><dt>Planos</dt><dd>Executor <em>R$ 1.590/mês</em> · RDO Starter <em>R$ 149/mês</em> (até 2 obras) · avulso <em>R$ 1.590/mês</em></dd><dt>Escopo</dt><dd>N1 entregue na v1.0 · N2 na v1.1 · financeiro de obra na v1.2</dd></dl>
+    <dl class="spec"><dt>Cobre</dt><dd>Execução: ordens de serviço, RDO em campo e medição</dd><dt>Integridade</dt><dd>Envio idempotente · controle de dispositivos por construtora · retomada e conferência na transmissão · cópia de segurança das fotos</dd><dt>Campo</dt><dd>App RDO Field Manager disponível nos três planos; os recursos do app variam por plano</dd><dt>Planos</dt><dd>Essencial <em>R$ 890/mês</em> · Professional <em>R$ 2.490/mês</em> · RDO Full como addon: sob consulta</dd><dt>Versão</dt><dd>Telas novas do app de campo na v1.3 · RDO Full na v1.6</dd></dl>
   </section>
 
-  <div class="stamp"><div class="cell"><div class="k">Projeto</div><div class="v">WORKS MANAGER</div></div><div class="cell"><div class="k">Prancha</div><div class="v">03/04 · EXECUÇÃO</div></div><div class="cell"><div class="k">Módulos</div><div class="v">03 + 04</div></div><div class="cell"><div class="k">Versão</div><div class="v">v1.0 · nov/2026</div></div></div>
-  <div class="next"><span>Próxima prancha</span><a href="prancha-04-ativos-frota.html">04 · Ativos &amp; frota — almoxarifado e horímetro <span class="m">&#8594;</span></a></div>
+  <div class="stamp"><div class="cell"><div class="k">Projeto</div><div class="v">WORKS MANAGER</div></div><div class="cell"><div class="k">Prancha</div><div class="v">03/04 · EXECUÇÃO</div></div><div class="cell"><div class="k">Planos</div><div class="v">TODOS</div></div><div class="cell"><div class="k">Versão</div><div class="v">v1.10 · nov/2026</div></div></div>
+  <div class="next"><span>Próxima prancha</span><a href="prancha-04-ativos-frota.html">04 · Ativos &amp; frota — manutenção e almoxarifado <span class="m">&#8594;</span></a></div>
 </div>
 
 <footer class="foot">
-  <p>Works Manager · Gestor de Obras Tecnologia · documento de apresentação, novembro de 2026. Números de mercado, preços e escopo conforme análise competitiva v2.0, proposta comercial set/2026 e arquitetura v1.1.0.</p>
+  <p>Works Manager · Gestor de Obras Tecnologia · documento de apresentação, novembro de 2026. Escopo por plano conforme a documentação do sistema v1.10.1 (ADR-013 e especificação de módulos comerciais v1.1). Preços conforme proposta comercial set/2026.</p>
   <p>Prancha 03/04</p>
 </footer>
 </main>

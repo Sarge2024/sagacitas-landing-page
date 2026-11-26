@@ -31,7 +31,7 @@ __THEME_HEAD__
 </head>
 <body>
 <header class="rail">
-  <div class="brand">WORKS<b>·</b>MANAGER</div>
+  <div class="brand"><a href="/" style="color:inherit;text-decoration:none;">SAGACITAS</a><b>·</b>WORKS<b>·</b>MANAGER</div>
   <div class="rail-meta">Dossiê de capacidades · prancha {num} de 04</div>
   __THEME_TOGGLE__
   <nav class="nav" aria-label="Pranchas">
@@ -60,7 +60,7 @@ __THEME_HEAD__
     <div class="sec-head">
       <span class="sec-id">// 01</span>
       <h2 class="sec-title">O que esta prancha entrega</h2>
-      <span class="sec-note">{nacts} atividades · <i>N1 → N2</i></span>
+      <span class="sec-note">{nacts} atividades · <i>{lvl_note}</i></span>
     </div>
     <div class="acts">
       {acts}
@@ -70,17 +70,17 @@ __THEME_HEAD__
   <section class="sec">
     <div class="sec-head">
       <span class="sec-id">// 02</span>
-      <h2 class="sec-title">Dois níveis, um mesmo módulo</h2>
-      <span class="sec-note">O N2 consome o dado do N1</span>
+      <h2 class="sec-title">Dois planos, um mesmo sistema</h2>
+      <span class="sec-note">Cada plano herda tudo do anterior</span>
     </div>
     <div class="levels">
       <div class="lvl">
-        <p class="lvl-k"><b>N1 · Assistido</b> — entrada</p>
+        <p class="lvl-k"><b>{n1_k}</b> — entrada</p>
         <h4>{n1_sub}</h4>
         <ul>{n1_li}</ul>
       </div>
       <div class="lvl">
-        <p class="lvl-k"><b>N2 · Automatizado</b> — upgrade</p>
+        <p class="lvl-k"><b>{n2_k}</b> — upgrade</p>
         <h4>{n2_sub}</h4>
         <ul>{n2_li}</ul>
       </div>
@@ -91,7 +91,7 @@ __THEME_HEAD__
     <div class="sec-head">
       <span class="sec-id">// 03</span>
       <h2 class="sec-title">Ficha técnica</h2>
-      <span class="sec-note">Fonte: dados do projeto</span>
+      <span class="sec-note">Fonte: documentação do sistema v1.10</span>
     </div>
     <dl class="spec">{spec}</dl>
   </section>
@@ -101,7 +101,7 @@ __THEME_HEAD__
 </div>
 
 <footer class="foot">
-  <p>Works Manager · Gestor de Obras Tecnologia · documento de apresentação, novembro de 2026. Números de mercado, preços e escopo conforme análise competitiva v2.0, proposta comercial set/2026 e arquitetura v1.1.0.</p>
+  <p>Works Manager · Gestor de Obras Tecnologia · documento de apresentação, novembro de 2026. Escopo por plano conforme a documentação do sistema v1.10.1 (ADR-013 e especificação de módulos comerciais v1.1). Preços conforme proposta comercial set/2026.</p>
   <p>Prancha {num}/04</p>
 </footer>
 </main>
@@ -151,145 +151,162 @@ __THEME_JS__
 </html>
 """
 
+# Tag de cada atividade: em qual plano ela entra (herança cumulativa, ADR-013).
+TAGS = {
+ "E": ("n1", "Essencial"),
+ "P": ("n2", "Professional"),
+ "X": ("n2", "Enterprise"),
+ "T": ("", "todos os planos"),
+ "A": ("", "addon"),
+}
+
 MODULES = [
  dict(
   num="01", slug="prancha-01-orcamento",
-  mod_label="Módulo 02 · Orçamento de Obras + Módulo 05 · Custos &amp; BDI",
+  mod_label="Orçamentação · CUB, composição, produtividade e reformas",
   eyebrow="Prancha 01 <s>·</s> Orçamentação",
   h1="A margem se decide antes da primeira pá.",
-  lede="Orçamento paramétrico por CUB para responder rápido. Composição analítica por SINAPI e SICRO para responder certo — com BDI auditável, encargos completos e proposta pronta para ir ao cliente.",
-  chips=['<span class="chip a">N1 e N2 na v1.0</span>','<span class="chip">CUB · SINAPI · SICRO</span>','<span class="chip t">BDI auditável</span>'],
+  lede="Orçamento paramétrico por CUB para responder rápido. Composição analítica pelas bases SINAPI, SICRO, DER e IOPES, ou por produtividade no Budget Pro, para responder certo — sempre a partir de uma premissa de obra registrada e versionada.",
+  chips=['<span class="chip a">3 métodos de orçamento</span>','<span class="chip">CUB · SINAPI · SICRO · DER · IOPES</span>','<span class="chip t">Premissas versionadas</span>'],
   img="orcamento.jpg",
   alt="Sala de orçamentos ao pôr do sol, com engenheiro sobre plantas e monitor de custos",
   title="Prancha 01 · Orçamento — Works Manager",
-  desc="Orçamento de obras por CUB, SINAPI e SICRO, com BDI auditável e proposta comercial em PDF.",
+  desc="Orçamento de obras por CUB, por composição SINAPI/SICRO/DER/IOPES e por produtividade TCPO, com premissas versionadas e addon de reformas.",
   acts=[
-   ("CUB paramétrico por padrão e região","Escolhe o padrão construtivo e a região, mexe nos sliders de macroetapa e o total recalcula na hora. Serve para responder ao cliente no mesmo dia.","N1"),
-   ("Composição analítica por SINAPI e SICRO","Cada serviço vira composição com insumo, coeficiente e preço de referência. É o que sustenta obra pública e contrato com BDI complexo.","N2"),
-   ("Encargos sociais SINAPI, Grupos A–E","Alíquotas parametrizadas por regime e por tipo de obra, com tratamento da desoneração da folha. Nenhum encargo digitado à mão na planilha.","—"),
-   ("BDI conforme Acórdão TCU 2.622/2013","Cálculo por tipo de obra com memória rastreável: taxa, base e composição ficam registradas junto do orçamento.","N2"),
-   ("Tabela CBO/CCT por região e sindicato","Cargos, pisos e jornadas atualizáveis por acordo coletivo. A mão de obra sai do orçamento com o custo do sindicato certo.","—"),
-   ("Simulação de cenários lado a lado","Duas ou três versões do mesmo empreendimento comparadas por macroetapa, para decidir antes de apresentar.","N1"),
-   ("Proposta comercial em PDF","Documento personalizado, gerado a partir do orçamento aprovado e versionado por cliente e empreendimento.","N1"),
-   ("Previsto × realizado por macroetapa","Ao longo da obra, o orçamento aprovado é comparado com o custo real e o desvio aparece por etapa, não no total.","N2"),
+   ("CUB paramétrico com produtividade TCPO","Escolhe o padrão construtivo e a região, ajusta as macroetapas e o total recalcula na hora. Os preços vêm do catálogo local, mantido pela própria construtora.","E"),
+   ("Premissas de obra versionadas","Cada orçamento parte de uma premissa registrada. Uma revisão gera nova versão; a anterior nunca é apagada, e o orçamento guarda qual versão usou.","T"),
+   ("Composição pelas bases públicas","Orçamento bottom-up por item de EAP, com composições SINAPI, SICRO, DER, IOPES e CMG filtradas por UF, mês e regime, já com insumos e custo.","P"),
+   ("Budget Pro: orçamento por produtividade","Custo calculado pela produtividade TCPO/RUP: horas-homem por unidade, mão de obra por CBO com encargos e materiais do catálogo, para obras rodoviárias e prediais.","P"),
+   ("Composições próprias da construtora","Editor de composições com o custo-hora real da mão de obra. Cobre o serviço que a tabela pública não tem e entra na mesma EAP das bases oficiais.","P"),
+   ("Curva ABC dos insumos","Mostra os poucos insumos que concentram a maior parte do custo do orçamento. É onde a negociação com o fornecedor rende de verdade.","P"),
+   ("Ciclo de vida até a aprovação","Rascunho, pré-projeto e aprovado. Na aprovação, o projeto ganha um retrato imutável que serve de base para medir a obra.","P"),
+   ("Reformas: do diagnóstico ao Ante-Projeto","Caracterização da edificação, unidades geradas por template e checklist de patologias por unidade. Cada método de reparo aponta composições compatíveis e gera o orçamento por unidade e global.","A"),
   ],
-  n1_sub="O orçamento que fecha rápido, com o usuário arbitrando as composições agregadas.",
-  n1_li=["Orçamento paramétrico com CUB e sliders de macroetapa","Bases SINAPI e SICRO consultadas por serviço","Propostas comerciais em PDF","Versionamento por cliente e empreendimento"],
-  n2_sub="O mesmo orçamento em composição analítica, com quantitativo derivado e preço auditável.",
-  n2_li=["Composição por insumo, coeficiente e encargo","Quantitativos derivados do projeto","BDI auditável por tipo de obra","Comparativo previsto × realizado por etapa"],
+  lvl_note="Essencial → Professional",
+  n1_k="Essencial", n2_k="Professional",
+  n1_sub="O orçamento que fecha rápido, com o catálogo de preços da própria construtora.",
+  n1_li=["Orçamento paramétrico por CUB com padrão TCPO","Catálogo local de preços, mantido pelo cliente","Premissas de obra versionadas","Budget Pro disponível como addon"],
+  n2_sub="O mesmo orçamento em composição analítica, com bases públicas e composições próprias.",
+  n2_li=["Composição SINAPI, SICRO, DER, IOPES e CMG","Budget Pro incluso no plano","Editor de composições próprias e curva ABC","Addon Reformas para condomínios e edificações existentes"],
   spec=[
-   ("Cobre","Módulo 02 · Orçamento de Obras e Módulo 05 · Custos &amp; BDI"),
-   ("Conformidade","Acórdão TCU 2.622/2013 · encargos SINAPI Grupos A–E · desoneração da folha (Lei 13.161/2015)"),
-   ("Motor de cálculo","45 tabelas relacionais · 20 fórmulas encadeadas (F1–F20) · fluxo em 14 etapas (E1–E14)"),
-   ("Planos","Essencial <em>R$ 890/mês</em> (base) · avulso <em>R$ 1.290/mês</em> · incluído no Profissional"),
-   ("Escopo","N1 e N2 entregues na v1.0"),
+   ("Cobre","Orçamentação: CUB paramétrico, composição analítica, Budget Pro e addon Reformas"),
+   ("Bases","SINAPI · SICRO · DER · IOPES · CMG, por UF, mês e regime (Professional em diante)"),
+   ("Catálogo Reformas","6 categorias · 14 patologias · 43 métodos de reparo · 4 técnicas de preparação · 8 templates de unidade"),
+   ("Planos","Essencial <em>R$ 890/mês</em> (CUB) · Professional <em>R$ 2.490/mês</em> (composição e Budget Pro) · Budget Pro avulso no Essencial e Reformas: sob consulta"),
+   ("Versão","Reformas entregue na v1.10.0 · correção de composições na v1.10.1 (nov/2026)"),
   ],
-  stamp=[("Projeto","WORKS MANAGER"),("Prancha","01/04 · ORÇAMENTO"),("Módulos","02 + 05"),("Versão","v1.0 · nov/2026")],
+  stamp=[("Projeto","WORKS MANAGER"),("Prancha","01/04 · ORÇAMENTO"),("Planos","ESSENCIAL + PROFESSIONAL"),("Versão","v1.10 · nov/2026")],
   next="02 · Planejamento — da EAP ao caminho crítico",
  ),
  dict(
   num="02", slug="prancha-02-planejamento",
-  mod_label="Módulo 02 · Planejamento",
+  mod_label="Planejamento · EAP, cronograma CPM e recursos",
   eyebrow="Prancha 02 <s>·</s> Planejamento",
   h1="O atraso aparece no Gantt antes de aparecer no caixa.",
-  lede="Da EAP ao cronograma CPM e à curva S: o plano nasce do orçamento aprovado, mostra o caminho crítico e chega ao canteiro como onda de compra — não como surpresa.",
-  chips=['<span class="chip a">N1 na v1.0 · N2 na v1.1</span>','<span class="chip">EAP/WBS · CPM</span>','<span class="chip t">Curva S</span>'],
+  lede="Da estrutura da obra ao caminho crítico: o cronograma nasce do orçamento, conta prazo em dias úteis, respeita a cura do concreto e mostra a cadeia que não pode atrasar.",
+  chips=['<span class="chip a">CPM com folgas reais</span>','<span class="chip">Dias úteis · feriados · cura</span>','<span class="chip t">Regras ABNT/TCPO</span>'],
   img="planejamento.jpg",
   alt="Sala de planejamento com cronograma mestre na parede, maquete e engenheira apontando o caminho crítico",
   title="Prancha 02 · Planejamento — Works Manager",
-  desc="EAP/WBS, Gantt CPM, curva S e histograma de mão de obra, com ondas de compra derivadas do caminho crítico.",
+  desc="EAP a partir de estruturas de obra, cronograma CPM com calendário de dias úteis e regras de cura ABNT/TCPO, histograma, nivelamento de recursos e planejamento de compras.",
   acts=[
-   ("EAP hierárquica multi-nível","WBS customizável por tipologia de obra. A mesma estrutura sustenta orçamento, cronograma e medição — sem remontar a árvore em cada módulo.","N1"),
-   ("Gantt CPM com caminho crítico automático","O sistema calcula folgas e marca a cadeia que não pode atrasar. O que está em vermelho é o que decide a entrega.","N1"),
-   ("Cronograma gerado do orçamento","Com o orçamento analítico aprovado, as atividades nascem das composições e dos índices de produção, em vez de serem digitadas.","N2"),
-   ("Curva S físico-financeira","Previsto, realizado e tendência na mesma linha. A pergunta deixa de ser “quanto já gastamos” e passa a ser “onde vamos chegar”.","N1"),
-   ("Histograma de mão de obra","Efetivo por equipe, função e período. Mostra o pico de mobilização antes de ele virar contratação de emergência.","N1"),
-   ("Linha de base versionada","O plano aprovado fica congelado como referência. Todo desvio é medido contra ele, e cada replanejamento gera uma nova linha.","N1"),
-   ("Ondas de compra pelo caminho crítico","Do prazo de cada atividade sai quando o material precisa estar no canteiro. A compra segue a obra, não o calendário do comprador.","N2"),
-   ("Importação de MS Project","Arquivos .mpp e .xml entram com reconciliação de atividades, datas e recursos — para quem já tem cronograma pronto.","N1"),
+   ("EAP a partir de estruturas de obra","Catálogo de estruturas com macroetapas, etapas filhas, regras construtivas e locação por pavimento. Importada no projeto, já traz durações e predecessoras.","T"),
+   ("Caminho crítico calculado de verdade","Ida e volta do método CPM: início e fim mais tarde, folga de cada tarefa e destaque no Gantt da cadeia que decide a entrega.","T"),
+   ("Calendário de dias úteis","Durações em dias úteis, com feriados e exceções do calendário. A sucessora que cairia num feriado é empurrada para o próximo dia útil.","T"),
+   ("Regras tecnológicas ABNT/TCPO","Lags de cura e espera normativos em dias corridos, úteis ou percentual da duração, com seis regras padrão editáveis e restauráveis.","T"),
+   ("Físico-financeiro, curva S e histograma","Gerados a partir do orçamento: quanto se gasta e quanta gente se mobiliza em cada período, sem montar planilha à parte.","E"),
+   ("Cronograma executivo com redistribuição","Um ajuste de prazo redistribui automaticamente os recursos no tempo. O plano executivo acompanha a obra, não fica congelado no planejado.","P"),
+   ("Equipes por EAP e nivelamento","Equipes vinculadas aos itens da estrutura, nivelamento por disponibilidade limitada e redimensionamento pela capacidade financeira do cliente.","P"),
+   ("Planejamento de compras","Quantitativos de materiais por período, corrigidos pelo cronograma. A compra segue a aplicação definida na EAP, não o calendário do comprador.","P"),
   ],
-  n1_sub="O plano executivo montado à mão, com assistência de cálculo e curva S.",
-  n1_li=["EAP/WBS e Gantt CPM assistidos","Curva S e histograma de mão de obra","Linha de base versionada","Importação de cronogramas do MS Project"],
-  n2_sub="O cronograma que se monta a partir do orçamento e antecipa a compra.",
-  n2_li=["Atividades geradas das composições do orçamento","Duração por índice de produção","Ondas de compra derivadas do caminho crítico","Replanejamento com nova linha de base"],
+  lvl_note="Essencial → Professional",
+  n1_k="Essencial", n2_k="Professional",
+  n1_sub="O cronograma planejado, gerado do orçamento e calculado pelo caminho crítico.",
+  n1_li=["EAP a partir de estruturas de obra","Gantt CPM com calendário de dias úteis e cura","Cronograma físico-financeiro e histograma automáticos","Importação de cronogramas do MS Project (.xml/.mpp)"],
+  n2_sub="O cronograma executivo que redistribui recursos e antecipa a compra.",
+  n2_li=["Cronograma executivo com redistribuição automática","Equipes por EAP e nivelamento de recursos","Agenda e calendários de disponibilidade","Planejamento de compras alinhado ao cronograma"],
   spec=[
-   ("Cobre","Módulo 02 · Planejamento"),
-   ("Entradas","Orçamento aprovado · EAP · calendário e regime de trabalho · índices de produção"),
-   ("Saídas","Cronograma CPM · curva S · histograma · ondas de compra · linha de base"),
-   ("Planos","Executor <em>R$ 1.590/mês</em> · avulso <em>R$ 1.890/mês</em> · incluído no Profissional"),
-   ("Escopo","N1 entregue na v1.0 · N2 na v1.1"),
+   ("Cobre","Planejamento: EAP, cronograma CPM, recursos e compras"),
+   ("Entradas","Orçamento · estrutura de obra · calendário com feriados · regras tecnológicas · arquivos do MS Project"),
+   ("Saídas","Gantt com caminho crítico · folgas · físico-financeiro · curva S · histograma · quantitativos de compra"),
+   ("Planos","Essencial <em>R$ 890/mês</em> (cronograma planejado) · Professional <em>R$ 2.490/mês</em> (executivo, nivelamento e compras)"),
+   ("Versão","Motor CPM e regras tecnológicas na v1.7 · estruturas de obra na v1.8 · esteira construtiva em 7 fases na v1.9"),
   ],
-  stamp=[("Projeto","WORKS MANAGER"),("Prancha","02/04 · PLANEJAMENTO"),("Módulo","02"),("Versão","v1.0 · nov/2026")],
+  stamp=[("Projeto","WORKS MANAGER"),("Prancha","02/04 · PLANEJAMENTO"),("Planos","ESSENCIAL + PROFESSIONAL"),("Versão","v1.10 · nov/2026")],
   next="03 · Execução — OS e RDO em campo",
  ),
  dict(
   num="03", slug="prancha-03-execucao",
-  mod_label="Módulo 03 · Execução (OS) + Módulo 04 · RDO em Campo",
+  mod_label="Execução · ordens de serviço, RDO em campo e medição",
   eyebrow="Prancha 03 <s>·</s> Execução &amp; campo",
   h1="O diário de obra não se perde no canteiro.",
-  lede="A ordem de serviço nasce do cronograma. O RDO nasce no canteiro, offline, com idempotência que garante ao diário o valor de prova — e a telemetria fecha a produtividade real.",
-  chips=['<span class="chip a">N1 na v1.0 · N2 na v1.1</span>','<span class="chip">iOS · Android · offline</span>','<span class="chip t">Idempotência</span>'],
+  lede="A ordem de serviço nasce da EAP. O RDO nasce no canteiro, offline, em aparelho autorizado e sem duplicar registro — e é ele que alimenta a medição do período.",
+  chips=['<span class="chip a">RDO nos três planos</span>','<span class="chip">App de campo offline</span>','<span class="chip t">Idempotência</span>'],
   img="execucao.jpg",
   alt="Canteiro de obras em golden hour, com grua içando caçamba e engenheiro com tablet",
   title="Prancha 03 · Execução — Works Manager",
-  desc="Ordens de serviço vinculadas à EAP e RDO offline com idempotência, fotos georreferenciadas e telemetria.",
+  desc="Ordens de serviço vinculadas à EAP, RDO offline com idempotência e controle de dispositivos, medição por período e addon RDO Full para projetos sem orçamento.",
   acts=[
-   ("Ordem de serviço vinculada à EAP","Cada OS carrega escopo, equipe, prazo e a atividade que ela realiza. O que foi executado fica rastreável até a linha do cronograma.","N1"),
-   ("OS geradas do Gantt","Na virada da semana, as ordens saem do cronograma para o campo. O gestor revisa e libera em vez de redigitar.","N2"),
-   ("RDO offline com idempotência","O canteiro opera em LTE fraco. A sincronização parcial não duplica registro: cada diário tem uma chave única por obra e data.","N1"),
-   ("Fotos georreferenciadas com timestamp","Prova de execução com coordenada, hora e autor. Serve para medir, para contestar e para defender o prazo em contrato.","N1"),
-   ("Alertas de clima, segurança e atraso","Regras configuráveis disparam aviso por WhatsApp e e-mail quando o dia foge do previsto.","N1"),
-   ("Produtividade por equipe e efetivo","Horas por serviço, efetivo por dia e desvio contra o previsto. A produtividade real deixa de ser estimativa de fim de obra.","N2"),
-   ("Medição e fechamento do registro","O fechamento do RDO gera o evento que alimenta a medição. No financeiro (v1.2), é o mesmo evento que vira título a receber.","N1"),
-   ("Requisição de material a partir da OS","A OS que vai começar puxa o material contra o almoxarifado da obra, com rastro de quem pediu e para qual serviço.","N2"),
+   ("Ordens de serviço manuais","O gestor cria a OS com escopo, equipe e prazo e a distribui para o campo. Disponível desde o Essencial.","E"),
+   ("OS geradas das composições e da EAP","Na aprovação do projeto, as OS saem do quantitativo das composições, com mão de obra, materiais e ativos associados. A geração é idempotente e incremental.","P"),
+   ("RDO offline com idempotência","O canteiro opera em sinal fraco. Cada envio tem chave única, a sincronização parcial não duplica o diário e só aparelhos autorizados transmitem.","T"),
+   ("Transmissão com retomada e integridade","O envio interrompido retoma de onde parou, o conteúdo é conferido na chegada e as fotos, com hora e localização, ganham cópia de segurança.","T"),
+   ("RDOs Recebidos: revisão antes de medir","No Essencial o RDO vai direto para a medição. No Professional ele passa por revisão e aprovação antes de entrar na conta.","P"),
+   ("Medição por período","O usuário define o período e a medição soma todos os RDOs disponíveis nele. Funciona igual em todos os planos.","T"),
+   ("Terceirizados e locação","Cadastro em todos os planos. No Professional, terceirizados e equipamentos locados ficam vinculados às OS e aos contratos.","P"),
+   ("RDO Full: projeto sem orçamento","Para quem só precisa medir para cobrar: o projeto entra com a EAP montada à mão, sem orçamento, e a base de medição fica protegida contra alteração.","A"),
   ],
-  n1_sub="O campo registrando à mão, com garantia de que nada será duplicado nem perdido.",
-  n1_li=["OS manuais criadas e distribuídas pelo gestor","RDO offline com sincronização idempotente","Fotos georreferenciadas e alertas","Medição a partir do registro fechado"],
-  n2_sub="O campo alimentado pelo cronograma e medido por telemetria, não por apontamento.",
-  n2_li=["OS geradas automaticamente do Gantt","Requisição de material contra o almoxarifado","Telemetria de frota: horas, ociosidade e consumo","Produtividade real fechada contra o previsto"],
+  lvl_note="Essencial → Professional",
+  n1_k="Essencial", n2_k="Professional",
+  n1_sub="O campo registrando com garantia de que nada é duplicado nem perdido.",
+  n1_li=["OS manuais criadas e distribuídas pelo gestor","RDO offline com sincronização idempotente","RDO disponível para medição na hora","Até 5 usuários e 3 projetos"],
+  n2_sub="O campo alimentado pela EAP e revisado antes de virar medição.",
+  n2_li=["OS geradas das composições e da EAP","RDOs Recebidos com revisão e aprovação","App de campo com equipes, ativos e frentes de serviço","Rendimento de equipes e registro de NRs"],
   spec=[
-   ("Cobre","Módulo 03 · Execução (OS) e Módulo 04 · RDO em Campo"),
-   ("Integridade","Registro único por (construtora, obra, data) · sincronização parcial sem duplicidade · evento de fechamento consumido pela medição"),
-   ("Campo","Aplicativo iOS e Android com operação offline · fotos com coordenada, hora e autor"),
-   ("Planos","Executor <em>R$ 1.590/mês</em> · RDO Starter <em>R$ 149/mês</em> (até 2 obras) · avulso <em>R$ 1.590/mês</em>"),
-   ("Escopo","N1 entregue na v1.0 · N2 na v1.1 · financeiro de obra na v1.2"),
+   ("Cobre","Execução: ordens de serviço, RDO em campo e medição"),
+   ("Integridade","Envio idempotente · controle de dispositivos por construtora · retomada e conferência na transmissão · cópia de segurança das fotos"),
+   ("Campo","App RDO Field Manager disponível nos três planos; os recursos do app variam por plano"),
+   ("Planos","Essencial <em>R$ 890/mês</em> · Professional <em>R$ 2.490/mês</em> · RDO Full como addon: sob consulta"),
+   ("Versão","Telas novas do app de campo na v1.3 · RDO Full na v1.6"),
   ],
-  stamp=[("Projeto","WORKS MANAGER"),("Prancha","03/04 · EXECUÇÃO"),("Módulos","03 + 04"),("Versão","v1.0 · nov/2026")],
-  next="04 · Ativos &amp; frota — almoxarifado e horímetro",
+  stamp=[("Projeto","WORKS MANAGER"),("Prancha","03/04 · EXECUÇÃO"),("Planos","TODOS"),("Versão","v1.10 · nov/2026")],
+  next="04 · Ativos &amp; frota — manutenção e almoxarifado",
  ),
  dict(
   num="04", slug="prancha-04-ativos-frota",
-  mod_label="Módulo 05 · Ativos — almoxarifado e frota",
+  mod_label="Ativos · frota, manutenção e almoxarifado",
   eyebrow="Prancha 04 <s>·</s> Ativos &amp; frota",
   h1="Cada hora de máquina parada aparece no horímetro.",
-  lede="Almoxarifado e frota no mesmo lugar: saldo por obra, curva ABC do que consome o orçamento e manutenção preventiva disparada pela hora real de máquina — não pelo calendário.",
-  chips=['<span class="chip a">N1 na v1.0 · N2 na v1.1</span>','<span class="chip">Curva ABC</span>','<span class="chip t">Horímetro</span>'],
+  lede="Frota com odômetro e horímetro, planos de manutenção preventiva e ordens de manutenção no Professional. Almoxarifado, materiais por obra e manutenção de máquinas e ferramentas no Enterprise.",
+  chips=['<span class="chip a">Professional · Enterprise</span>','<span class="chip">Odômetro · horímetro</span>','<span class="chip t">Manutenção preventiva</span>'],
   img="frota.jpg",
   alt="Pátio de máquinas ao pôr do sol, com escavadeiras enfileiradas e central de despacho",
   title="Prancha 04 · Ativos e frota — Works Manager",
-  desc="Almoxarifado com curva ABC, controle de ativos e manutenção preventiva disparada por horímetro.",
+  desc="Gestão de frota com odômetro e horímetro, manutenção preventiva e corretiva, almoxarifado e controle de materiais por obra.",
   acts=[
-   ("Almoxarifado por obra e centro de custo","Entradas, saídas e saldo no mesmo lugar. O material que chegou tem nota, obra e serviço de destino.","N1"),
-   ("Requisição e baixa de material","Do pedido do encarregado à baixa no estoque, com rastro por OS e por centro de custo.","N1"),
-   ("Curva ABC de materiais","Quais poucos itens concentram a maior parte do valor comprado. É onde a negociação com fornecedor rende de verdade.","N1"),
-   ("Cadastro de ativos com ficha própria","Veículos, máquinas e equipamentos com identificação, alocação por obra e histórico de uso.","N1"),
-   ("Telemetria de horas, ociosidade e consumo","O equipamento informa o que fez no dia. Cruzado com o RDO, fecha a produtividade real da frota.","N2"),
-   ("Manutenção preventiva por horímetro","O plano dispara pela hora trabalhada, não pela data. Máquina parada por falha deixa de ser fatalidade e passa a ser indicador.","N2"),
-   ("Custo por equipamento contra o orçado","Hora-máquina real contra hora-máquina prevista, por obra. Mostra se o equipamento próprio está saindo mais caro que a locação.","N2"),
-   ("Fornecedores e histórico cruzado","Compras por fornecedor, por obra e por profissional, com o preço praticado ao lado do preço de referência.","N1"),
+   ("Cadastro de ativos por categoria e tipo","Veículos, máquinas e equipamentos catalogados por categoria e tipo, com ficha própria. Disponível desde o Essencial.","E"),
+   ("Alocação de equipamentos por obra","Cada equipamento tem obra e projeto de destino, e o histórico de alocação fica registrado.","P"),
+   ("Odômetro e horímetro","Leituras lançadas no sistema ou no app de campo, junto do RDO, com operador, combustível e quilometragem do dia.","P"),
+   ("Manutenção preventiva e corretiva","Planos de manutenção preventiva e ordens de serviço de manutenção de veículos, da abertura ao fechamento.","P"),
+   ("Ocorrências de frota pelo app","O operador registra a ocorrência no campo, com tipo, recomendação e fotos, já ligada à OS.","P"),
+   ("Manutenção de máquinas e ferramentas","Complementa a manutenção de veículos, com histórico completo de manutenção por ativo.","X"),
+   ("Almoxarifado","Entrada por nota fiscal, saldo de estoque e inventário, por obra.","X"),
+   ("Controle de materiais por obra e OS","Rastreia onde cada material foi aplicado: em qual obra e em qual ordem de serviço.","X"),
   ],
-  n1_sub="O controle que já organiza o canteiro antes de qualquer sensor entrar em campo.",
-  n1_li=["Almoxarifado com entradas, saídas e saldo","Requisições com baixa rastreada por OS","Curva ABC de materiais","Cadastro de ativos e fornecedores"],
-  n2_sub="A frota que se mantém sozinha, guiada pela hora real de trabalho.",
-  n2_li=["Telemetria cruzada com o RDO","Plano de manutenção disparado por horímetro","Custo por equipamento contra o orçado","Alerta de ociosidade por obra"],
+  lvl_note="Professional → Enterprise",
+  n1_k="Professional", n2_k="Enterprise",
+  n1_sub="A frota controlada pela hora real de uso, com manutenção planejada.",
+  n1_li=["Alocação de equipamentos por obra","Odômetro e horímetro no sistema e no app","Planos de manutenção preventiva","OS de manutenção de veículos"],
+  n2_sub="O patrimônio inteiro da construtora: estoque, materiais e todo tipo de equipamento.",
+  n2_li=["Almoxarifado com nota fiscal, saldo e inventário","Rastreio de materiais por obra e OS","OS de manutenção de máquinas e ferramentas","Histórico completo de manutenção por ativo"],
   spec=[
-   ("Cobre","Módulo 05 · Ativos (almoxarifado e frota), apoiado no módulo 04 · RDO"),
-   ("Fonte do horímetro","Telemetria do RDO: horas trabalhadas, ociosidade e consumo por equipamento"),
-   ("Base","Cadastros de ativos, fornecedores e centros de custo da plataforma transversal"),
-   ("Planos","Incluído na gestão completa — Profissional <em>R$ 2.490/mês</em>. Não é vendido avulso"),
-   ("Escopo","N1 (almoxarifado) na v1.0 · N2 (manutenção por horímetro) na v1.1"),
+   ("Cobre","Ativos: frota e manutenção (Professional), almoxarifado e manutenção de máquinas (Enterprise)"),
+   ("Medidores","Odômetro e horímetro por equipamento, lançados no sistema ou no app de campo"),
+   ("Base","Cadastro de ativos por categoria e tipo, disponível em todos os planos"),
+   ("Planos","Frota no Professional <em>R$ 2.490/mês</em> · almoxarifado e manutenção de máquinas no Enterprise: sob consulta"),
+   ("Versão","v1.10 · nov/2026"),
   ],
-  stamp=[("Projeto","WORKS MANAGER"),("Prancha","04/04 · ATIVOS"),("Módulo","05"),("Versão","v1.0 · nov/2026")],
+  stamp=[("Projeto","WORKS MANAGER"),("Prancha","04/04 · ATIVOS"),("Planos","PROFESSIONAL + ENTERPRISE"),("Versão","v1.10 · nov/2026")],
   next="Fim do dossiê · próximo passo: página de abertura",
  ),
 ]
@@ -308,7 +325,7 @@ NAVLABELS = [("01","Orçamento","prancha-01-orcamento.html"),
 NEXTLABEL = {
  "prancha-01-orcamento": "02 · Planejamento — da EAP ao caminho crítico",
  "prancha-02-planejamento": "03 · Execução — OS e RDO em campo",
- "prancha-03-execucao": "04 · Ativos &amp; frota — almoxarifado e horímetro",
+ "prancha-03-execucao": "04 · Ativos &amp; frota — manutenção e almoxarifado",
  "prancha-04-ativos-frota": "Voltar ao índice — as quatro pranchas",
 }
 
@@ -325,8 +342,7 @@ def build():
         )
         acts = "".join(
             f'<article class="act"><div class="act-top"><span class="act-num">{i:02d}</span>'
-            f'<span class="act-tag {("n1" if t=="N1" else "n2" if t=="N2" else "")}">'
-            f'{"N1 assistido" if t=="N1" else "N2 automatizado" if t=="N2" else "ambos"}</span></div>'
+            f'<span class="act-tag {TAGS[t][0]}">{TAGS[t][1]}</span></div>'
             f'<h3>{html.escape(a)}</h3><p>{html.escape(d)}</p></article>'
             for i,(a,d,t) in enumerate(m["acts"],1)
         )
@@ -334,7 +350,8 @@ def build():
             title=m["title"], desc=m["desc"], css=CSS, nav=nav,
             num=m["num"], mod_label=m["mod_label"], img=imgs[m["img"]], alt=m["alt"], vid=VIDEO[m["slug"]],
             eyebrow=m["eyebrow"], h1=m["h1"], lede=m["lede"], chips="".join(m["chips"]),
-            nacts=len(m["acts"]), acts=acts,
+            nacts=len(m["acts"]), acts=acts, lvl_note=m["lvl_note"],
+            n1_k=m["n1_k"], n2_k=m["n2_k"],
             n1_sub=m["n1_sub"], n2_sub=m["n2_sub"],
             n1_li="".join(f"<li>{x}</li>" for x in m["n1_li"]),
             n2_li="".join(f"<li>{x}</li>" for x in m["n2_li"]),

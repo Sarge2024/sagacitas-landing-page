@@ -7,8 +7,16 @@ Este repositório é trabalhado por mais de um agente de IA (pelo menos Claude C
 3. `.ai/history/README.md` é o ledger completo (leitura obrigatória na primeira vez ou quando precisar de contexto histórico mais amplo).
 4. `WORKS_MANAGER_HANDOFF.md` — contexto cross-repo: este projeto recebe aulas de treinamento publicadas direto na tabela `lessons` pelo repo irmão `gestor-de-obras` (Works Manager). Leia antes de mexer em qualquer coisa relacionada a `lessons`, `CourseManifestService`, ou ao player de aulas.
 
-Ao concluir uma implementação não-trivial:
-- Rode `npm run lint` (`tsc --noEmit`) e `npm run build` — devem estar limpos antes de registrar qualquer coisa.
+## Método de trabalho (ver `.ai/WORKFLOW.md`)
+
+- **Claude avalia, planeja e faz a revisão final; o Gemini executa.** Uma tarefa não-trivial vira um plano em `.ai/tasks/<id>.md` (modelo: `.ai/tasks/_modelo.md`) com critérios de aceite e o teste previsto para cada um; o Gemini implementa com TDD e devolve para revisão. As instruções do executor estão em `GEMINI.md`.
+- O `status` do comando acima lista em `pending_tasks` as tarefas aguardando revisão do Claude.
+- Mudança de status só pelo `node scripts/ai-sync.mjs task --agent claude --id <id> --to aprovada|reprovada`. Aprovar roda lint, `npm test` e `verify-red-green` de novo.
+- Claude não implementa tarefa que ele mesmo vai revisar. Ajustes triviais podem ser feitos direto, registrados com `ai-sync write`.
+- **TDD obrigatório**: nenhum código de produção sem teste que falhou antes (`tests/**/*.test.ts`, `npm test`, prova com `node scripts/verify-red-green.mjs --base <commit>`).
+
+Ao concluir uma implementação não-trivial (ou ao aprovar uma tarefa):
+- Rode `npm run lint` (`tsc --noEmit`), `npm test` e `npm run build` — devem estar limpos antes de registrar qualquer coisa.
 - Prefira testar contra os serviços reais quando possível (`vercel dev` + curl para as Vercel Functions em `api/*.ts`; consultas diretas ao Supabase real para mudanças de dados) em vez de só ler o código — este repo tem histórico de bugs que só apareceram em teste real (endpoint morto da Hugging Face, tabelas inexistentes assumidas pelo carregamento de curso).
 - Registre com **`node scripts/ai-sync.mjs write --agent claude --summary "..." --scope "..." [--ref ...]`**.
 - Se for uma funcionalidade/correção significativa, adicione também um walkthrough em `.ai/history/` (formato: ver arquivos existentes na pasta) e atualize `.ai/history/README.md`. Toda entrada em `.ai/history/` deve ter uma linha correspondente em `.ai/sync/LOG.jsonl` com `ref` apontando para ela.
